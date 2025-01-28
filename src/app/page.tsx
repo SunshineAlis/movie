@@ -1,25 +1,26 @@
-import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import { MovieLogo } from "@/components/Movielogo";
+import Header from "@/components/Header"; // Header-ийг импортлоно
+import Footer from "@/components/Footer";
+
+import { MovieLogo } from "@/components/MovieLogo";
+import Phone from "@/components/Phone";
+import Email from "@/components/Email";
 
 export default function Home() {
   return (
     <div>
-      <div className="flex justify-between items-center p-4">
-        <div className="flex items-center">
-          <MovieLogo width={30} height={30} />
-          <p className="ml-2">Movie Z</p>
-        </div>
+      {/* Header component */}
+      <Header />
 
-        {/* Input хэсэг */}
-        <div className="flex gap-5">
-          <Input placeholder="Search..." />
-          <Input placeholder="Search..." />
-        </div>
-
-        {/* Other text */}
-        <p>odor shono</p>
+      <div className="p-4">
+        <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white">
+          Welcome to Movie Z!
+        </h1>
+        <p className="mt-4 text-center text-gray-600 dark:text-gray-400">
+          Explore movies, shows, and more.
+        </p>
       </div>
+
+      <Footer />
     </div>
   );
 }
