@@ -75,9 +75,6 @@ export default function Header() {
               <DropdownMenu.Item onClick={() => setTheme("dark")}>
                 Dark
               </DropdownMenu.Item>
-              <DropdownMenu.Item onClick={() => setTheme("system")}>
-                System
-              </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         </div>
