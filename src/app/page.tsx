@@ -1,19 +1,17 @@
-"use client"
+"use client";
 
-
-import Header from "@/components/Header"; 
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MovieSlide from "@/components/MovieSlide";
 import MovieComponent from "@/components/MovieComponent";
 
-
-export default function Home() {
+const Home = () => {
   return (
     <div>
-       <Header />
-       <MovieSlide />
-       <MovieComponent />
-       <div className="p-4">
+      <Header />
+      <MovieSlide />
+      <MovieComponent />
+      <div className="p-4">
         <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white">
           Welcome to Movie Z!
         </h1>
@@ -21,7 +19,9 @@ export default function Home() {
           Explore movies, shows, and more.
         </p>
       </div>
-       <Footer />
+      <Footer />
     </div>
   );
-}
+};
+
+export default Home;

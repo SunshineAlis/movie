@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 interface Movie {
   id: number;
@@ -31,6 +33,7 @@ export default function UpcomingMovies() {
 
   return (
     <div className="p-6">
+      <Header />
       <h1 className="text-2xl font-bold mb-4">Upcoming Movies</h1>
       <div className="grid grid-cols-5 gap-6">
         {movies.map((movie) => (
@@ -48,6 +51,7 @@ export default function UpcomingMovies() {
           </div>
         ))}
       </div>
+      <Footer />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaStar } from "react-icons/fa";
+import { getPopularMovies } from "@/app/utils/requests";
 
 interface Movie {
   id: number;
@@ -11,7 +12,11 @@ interface Movie {
   overview: string;
 }
 
-const MovieComponent = ({ selectedCategory }: { selectedCategory?: string }) => {
+const MovieComponent = ({
+  selectedCategory,
+}: {
+  selectedCategory?: string;
+}) => {
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
   const [topRatedMovies, setTopRatedMovies] = useState<Movie[]>([]);
   const [upComingMovies, setUpComingMovies] = useState<Movie[]>([]);
@@ -19,40 +24,14 @@ const MovieComponent = ({ selectedCategory }: { selectedCategory?: string }) => 
   const router = useRouter();
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        // Popular Movies
-        const popularRes = await fetch(
-          "https://api.themoviedb.org/3/movie/popular?api_key=ed40c9caeaf1b576a8d758395b370665"
-        );
-        const popularData = await popularRes.json();
-        if (popularData.results) {
-          setPopularMovies(popularData.results.slice(0, 10));
-        }
+    const getData = async () => {
+      const { results } = await getPopularMovies();
+      console.log(results);
 
-        // Upcoming Movies
-        const upComRes = await fetch(
-          "https://api.themoviedb.org/3/movie/upcoming?api_key=ed40c9caeaf1b576a8d758395b370665"
-        );
-        const upComData = await upComRes.json();
-        if (upComData.results) {
-          setUpComingMovies(upComData.results.slice(0, 10));
-        }
-
-        // Top Rated Movies
-        const topRatedRes = await fetch(
-          "https://api.themoviedb.org/3/movie/top_rated?api_key=ed40c9caeaf1b576a8d758395b370665"
-        );
-        const topRatedData = await topRatedRes.json();
-        if (topRatedData.results) {
-          setTopRatedMovies(topRatedData.results.slice(0, 10));
-        }
-      } catch (error) {
-        console.error("Киноны мэдээлэл татахад алдаа гарлаа:", error);
-      }
+      setPopularMovies(results.slice(0, 10));
     };
 
-    fetchMovies();
+    getData();
   }, []);
 
   return (
@@ -61,7 +40,7 @@ const MovieComponent = ({ selectedCategory }: { selectedCategory?: string }) => 
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-black text-2xl font-bold">Upcoming Movies</h2>
         <button
-          onClick={() => router.push("/movies/upcoming")}
+          onClick={() => router.push("/upcoming")}
           className="text-white bg-gray-400 px-4 py-2 rounded-lg hover:bg-gray-700"
         >
           See More
@@ -88,7 +67,7 @@ const MovieComponent = ({ selectedCategory }: { selectedCategory?: string }) => 
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-black text-2xl font-bold">Popular Movies</h2>
         <button
-          onClick={() => router.push("/movies/popular")}
+          onClick={() => router.push("/popular")}
           className="text-white bg-gray-400 px-4 py-2 rounded-lg hover:bg-gray-700"
         >
           See More
@@ -115,7 +94,7 @@ const MovieComponent = ({ selectedCategory }: { selectedCategory?: string }) => 
       <div className="flex justify-between items-center mt-10 mb-5">
         <h2 className="text-black text-2xl font-bold">Top Rated Movies</h2>
         <button
-          onClick={() => router.push("/movies/top-rated")}
+          onClick={() => router.push("/toprated")}
           className="text-white bg-gray-400 px-4 py-2 rounded-lg hover:bg-gray-700"
         >
           See More
