@@ -4,7 +4,7 @@ import Email from "@/components/Email";
 
 export default function Home() {
   return (
-    <div className="w-[1440px] h-[280px] bg-[#4338CA] flex relative text-white">
+    <div className="w-[100%] h-[280px] bg-[#4338CA] flex relative text-white">
       <div className="flex flex-col content-center absolute left-[5%] top-[15%]">
         <div className="flex items-center justify-items-center ">
           <MovieLogo width={30} height={30} className="text-white" />

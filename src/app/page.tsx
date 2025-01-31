@@ -1,17 +1,19 @@
-import Header from "@/components/Header"; // Header-ийг импортлоно
-import Footer from "@/components/Footer";
+"use client"
 
-import { MovieLogo } from "@/components/MovieLogo";
-import Phone from "@/components/Phone";
-import Email from "@/components/Email";
+
+import Header from "@/components/Header"; 
+import Footer from "@/components/Footer";
+import MovieSlide from "@/components/MovieSlide";
+import MovieComponent from "@/components/MovieComponent";
+
 
 export default function Home() {
   return (
     <div>
-      {/* Header component */}
-      <Header />
-
-      <div className="p-4">
+       <Header />
+       <MovieSlide />
+       <MovieComponent />
+       <div className="p-4">
         <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white">
           Welcome to Movie Z!
         </h1>
@@ -19,8 +21,7 @@ export default function Home() {
           Explore movies, shows, and more.
         </p>
       </div>
-
-      <Footer />
+       <Footer />
     </div>
   );
 }
