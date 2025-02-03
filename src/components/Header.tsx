@@ -1,14 +1,15 @@
 "use client";
-import Image from "next/image";
+
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { MovieLogo } from "@/components/MovieLogo";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu"; // @radix-ui-ийн бүх элементүүдийг нэг импортлоно
-
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { FaSearch } from "react-icons/fa";
-
+import { getGenres } from "../utils/requests";
 import {
   Select,
   SelectContent,
@@ -17,37 +18,63 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+interface Genre {
+  id: number;
+  name: string;
+}
+
 export default function Header() {
   const { setTheme } = useTheme();
+  const router = useRouter();
+
+  const [genres, setGenres] = useState<Genre[]>([]);
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+
+  // Ensure genres are fetched on the client-side
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const data = await getGenres();
+        setGenres(data.genres || []);
+      } catch (error) {
+        console.error("Жанрууд татахад алдаа гарлаа:", error);
+      }
+    };
+
+    fetchGenres();
+  }, []);
+
+  // Handle genre selection
+  const handleGenreSelect = (genreId: string) => {
+    setSelectedGenre(genreId);
+    router.push(`/category/${genreId}`); // Redirect to category page with genreId
+  };
 
   return (
     <div className="bg-white dark:bg-gray-900">
       <div className="flex items-center justify-between p-4">
-        <div className="flex items-center justify-items-center ">
+        <div className="flex items-center">
           <MovieLogo width={30} height={30} className="text-[#4338CA]" />
-          <p className="mb-[5px] text-xl font-semibold self-center italic text-[#4338CA] dark:text-white">
+          <p className="mb-[5px] text-xl font-semibold italic text-[#4338CA] dark:text-white">
             Movie Z
           </p>
         </div>
 
-        {/* Genre select section */}
         <div className="flex gap-5">
           <div className="flex items-center gap-4">
-            {/* Select tag with genres */}
-            <Select>
-              <SelectTrigger className="w-[100px] flex-row-reverse">
+            <Select onValueChange={handleGenreSelect}>
+              <SelectTrigger className="w-[120px]">
                 <SelectValue placeholder="Genre" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="action">Action</SelectItem>
-                <SelectItem value="comedy">Comedy</SelectItem>
-                <SelectItem value="drama">Drama</SelectItem>
-                <SelectItem value="horror">Horror</SelectItem>
-                <SelectItem value="romance">Romance</SelectItem>
+                {genres.map((genre) => (
+                  <SelectItem key={genre.id} value={genre.id.toString()}>
+                    {genre.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
-            {/* Search Input with Search Icon */}
             <div className="relative">
               <Input
                 placeholder="Search..."
@@ -58,13 +85,12 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Theme Toggle Button */}
         <div>
           <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
               <Button variant="outline" size="icon">
-                <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <Sun className="h-[1.2rem] w-[1.2rem] transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-[1.2rem] w-[1.2rem] transition-all dark:rotate-0 dark:scale-100" />
                 <span className="sr-only">Toggle theme</span>
               </Button>
             </DropdownMenu.Trigger>
@@ -74,9 +100,6 @@ export default function Header() {
               </DropdownMenu.Item>
               <DropdownMenu.Item onClick={() => setTheme("dark")}>
                 Dark
-              </DropdownMenu.Item>
-              <DropdownMenu.Item onClick={() => setTheme("system")}>
-                System
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Root>
