@@ -1,7 +1,5 @@
-"use client";
-
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { MovieLogo } from "@/components/MovieLogo";
 import { Button } from "@/components/ui/button";
@@ -9,7 +7,9 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { FaSearch } from "react-icons/fa";
+import { FaArrowAltCircleDown } from "react-icons/fa";
 import { getGenres } from "../utils/requests";
+
 import {
   Select,
   SelectContent,
@@ -17,37 +17,58 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import DownArrow from "./DownArrow";
+import RightArrow from "./RigthArrow";
 
 interface Genre {
   id: number;
   name: string;
 }
 
-export default function Header() {
-  const { setTheme } = useTheme();
+interface HeaderProps {
+  parsedGenreId: number | null; // Accept null as possible value
+}
+
+export default function Header({ parsedGenreId }: HeaderProps) {
+  const { theme, setTheme } = useTheme();
   const router = useRouter();
 
   const [genres, setGenres] = useState<Genre[]>([]);
-  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  const [showGenres, setShowGenres] = useState(false);
+  const [selectedGenre, setSelectedGenre] = useState<number | undefined>();
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Ensure genres are fetched on the client-side
+  // Fetch genres
   useEffect(() => {
     const fetchGenres = async () => {
       try {
         const data = await getGenres();
         setGenres(data.genres || []);
       } catch (error) {
-        console.error("Жанрууд татахад алдаа гарлаа:", error);
+        console.error("Error fetching genres:", error);
       }
     };
 
     fetchGenres();
   }, []);
+  const toggleGenreList = () => {
+    setShowGenres(!showGenres);
+  };
+
+  // useEffect(() => {
+  //   if (parsedGenreId !== null && parsedGenreId !== undefined) {
+  //     setSelectedGenre(parsedGenreId.toString());
+  //   }
+  // }, [parsedGenreId]);
 
   // Handle genre selection
-  const handleGenreSelect = (genreId: string) => {
+  const handleGenreSelect = (genreId: number) => {
     setSelectedGenre(genreId);
-    router.push(`/category/${genreId}`); // Redirect to category page with genreId
+    router.push(`/category/${genreId}`);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
@@ -59,38 +80,86 @@ export default function Header() {
             Movie Z
           </p>
         </div>
+        <div className="flex items-center gap-[10px]">
+          <div className="flex flex-col items-center gap-2 ">
+            {/* Genre button  */}
+            <button
+              className="w-[120px] text-black font-bold flex items-center gap-[10px] border ml-[-250px] p-2 rounded"
+              onClick={toggleGenreList}
+            >
+              {" "}
+              <p></p>
+              <div className=""></div>
+              <DownArrow className="text-black font-bold ml-[15px]" />
+              {showGenres ? "Genres " : "Genres"}
+            </button>
 
-        <div className="flex gap-5">
-          <div className="flex items-center gap-4">
-            <Select onValueChange={handleGenreSelect}>
-              <SelectTrigger className="w-[120px]">
-                <SelectValue placeholder="Genre" />
-              </SelectTrigger>
-              <SelectContent>
+            {/* Genre list */}
+            {showGenres && (
+              <div className="relative z-[999]">
+                {/* Ensure the parent container is positioned relatively */}
+                <div className="flex flex-wrap gap-2 mt-2 w-[400px] absolute  left-[-200px] bg-white shadow-lg rounded-lg border z-[1000]">
+                  <div className="flex flex-col w-[400px] items-center">
+                    <h2 className="font-bold mr-[300px] mt-[20px] text-2xl">
+                      Genres
+                    </h2>
+                    <p>See lists of movies by genre</p>
+                    <div className="w-[360px] h-[2px] border "></div>
+                  </div>
+                  {genres.map((genre) => (
+                    <button
+                      key={genre.id}
+                      onClick={() => handleGenreSelect(genre.id)}
+                      className="p-2 rounded flex items-center gap-[5px] font-bold text-xs border hover:bg-gray-200"
+                    >
+                      {genre.name}
+                      <RightArrow />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* {showGenres && (
+              <div className="flex flex-wrap gap-2 mt-2 w-[400px] absolute z-index-1">
                 {genres.map((genre) => (
-                  <SelectItem key={genre.id} value={genre.id.toString()}>
+                  <button
+                    key={genre.id}
+                    onClick={() => handleGenreSelect(genre.id)}
+                    className="p-2 rounded flex items-center gap-[5px] font-bold text-xs border"
+                  >
                     {genre.name}
-                  </SelectItem>
+                    <RightArrow />
+                  </button>
                 ))}
-              </SelectContent>
-            </Select>
-
-            <div className="relative">
-              <Input
-                placeholder="Search..."
-                className="pl-10 text-gray-900 dark:text-white"
-              />
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400" />
-            </div>
+              </div>
+            )} */}
+          </div>
+          {/* input */}
+          <div className=" border rounded-lg relative">
+            <Input
+              value={searchQuery}
+              onChange={handleSearchChange}
+              placeholder="Search..."
+              className="pl-10 text-gray-900 dark:text-white"
+            />
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400" />
           </div>
         </div>
 
         <div>
           <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
-              <Button variant="outline" size="icon">
-                <Sun className="h-[1.2rem] w-[1.2rem] transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-[1.2rem] w-[1.2rem] transition-all dark:rotate-0 dark:scale-100" />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+              >
+                {theme === "light" ? (
+                  <Moon className="h-[1.2rem] w-[1.2rem]" />
+                ) : (
+                  <Sun className="h-[1.2rem] w-[1.2rem]" />
+                )}
                 <span className="sr-only">Toggle theme</span>
               </Button>
             </DropdownMenu.Trigger>
