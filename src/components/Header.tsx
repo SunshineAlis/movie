@@ -7,8 +7,8 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { FaSearch } from "react-icons/fa";
-import { FaArrowAltCircleDown } from "react-icons/fa";
 import { getGenres } from "../utils/requests";
+
 
 import {
   Select,
@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import DownArrow from "./DownArrow";
-import RightArrow from "./RigthArrow";
+import RightArrow from "./Arrow";
 
 interface Genre {
   id: number;
@@ -55,12 +55,6 @@ export default function Header({ parsedGenreId }: HeaderProps) {
     setShowGenres(!showGenres);
   };
 
-  // useEffect(() => {
-  //   if (parsedGenreId !== null && parsedGenreId !== undefined) {
-  //     setSelectedGenre(parsedGenreId.toString());
-  //   }
-  // }, [parsedGenreId]);
-
   // Handle genre selection
   const handleGenreSelect = (genreId: number) => {
     setSelectedGenre(genreId);
@@ -80,60 +74,44 @@ export default function Header({ parsedGenreId }: HeaderProps) {
             Movie Z
           </p>
         </div>
-        <div className="flex items-center gap-[10px]">
-          <div className="flex flex-col items-center gap-2 ">
+        <div className="flex items-center gap-[1px]">
+          <div className="flex flex-col items-center ">
             {/* Genre button  */}
             <button
               className="w-[120px] text-black font-bold flex items-center gap-[10px] border ml-[-250px] p-2 rounded"
               onClick={toggleGenreList}
             >
-              {" "}
-              <p></p>
-              <div className=""></div>
-              <DownArrow className="text-black font-bold ml-[15px]" />
+              <DownArrow className="text-black font-bold ml-[10px]" />
               {showGenres ? "Genres " : "Genres"}
+
+              {showGenres && (
+                <div className="relative z-[999] mt-[40px] ml-[105px]">
+                
+                  <div className="flex flex-wrap gap-2 mt-2 w-[400px] pb-[10px] absolute  left-[-200px] bg-white shadow-lg rounded-lg border z-[1000]">
+                    <div className="flex flex-col w-[400px] items-center">
+                      <h2 className="font-bold mr-[300px] mt-[20px] text-2xl">
+                        Genres
+                      </h2>
+                      <p className="font-bold mr-[150px] mt-[10px] text-l">See lists of movies by genre</p>
+                      <div className="w-[380px] h-[2px] border-2 mt-[5px] "></div>
+                    </div>
+                    {genres.map((genre) => (
+                      <button
+                        key={genre.id}
+                        onClick={() => handleGenreSelect(genre.id)}
+                        className="p-2 rounded flex items-center ml-[10px] mb-[2px] font-bold text-xs border hover:bg-gray-200"
+                      >
+                        {genre.name}
+                        <RightArrow />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </button>
 
-            {/* Genre list */}
-            {showGenres && (
-              <div className="relative z-[999]">
-                {/* Ensure the parent container is positioned relatively */}
-                <div className="flex flex-wrap gap-2 mt-2 w-[400px] absolute  left-[-200px] bg-white shadow-lg rounded-lg border z-[1000]">
-                  <div className="flex flex-col w-[400px] items-center">
-                    <h2 className="font-bold mr-[300px] mt-[20px] text-2xl">
-                      Genres
-                    </h2>
-                    <p>See lists of movies by genre</p>
-                    <div className="w-[360px] h-[2px] border "></div>
-                  </div>
-                  {genres.map((genre) => (
-                    <button
-                      key={genre.id}
-                      onClick={() => handleGenreSelect(genre.id)}
-                      className="p-2 rounded flex items-center gap-[5px] font-bold text-xs border hover:bg-gray-200"
-                    >
-                      {genre.name}
-                      <RightArrow />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
-            {/* {showGenres && (
-              <div className="flex flex-wrap gap-2 mt-2 w-[400px] absolute z-index-1">
-                {genres.map((genre) => (
-                  <button
-                    key={genre.id}
-                    onClick={() => handleGenreSelect(genre.id)}
-                    className="p-2 rounded flex items-center gap-[5px] font-bold text-xs border"
-                  >
-                    {genre.name}
-                    <RightArrow />
-                  </button>
-                ))}
-              </div>
-            )} */}
+
           </div>
           {/* input */}
           <div className=" border rounded-lg relative">
