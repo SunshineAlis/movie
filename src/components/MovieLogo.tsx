@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 type LogoProps = {
@@ -17,8 +18,8 @@ export const MovieLogo: React.FC<LogoProps> = ({
     width={width}
     height={height}
     fill="none"
-    className={className} // className дамжуулах
-    {...props} // Дахин бусад props дамжуулах
+    className={className} //
+    {...props} //
   >
     <path
       stroke="currentColor"

@@ -1,3 +1,5 @@
+"use client";
+
 import { MovieLogo } from "@/components/MovieLogo";
 import Phone from "@/components/Phone";
 import Email from "@/components/Email";

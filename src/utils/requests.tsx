@@ -11,37 +11,36 @@ const instance = axios.create({
   baseURL: BASE_URL,
   params: { api_key: API_KEY },
 });
- 
+
 //  genreId
-export const getGenreIdMovies = async (genreId?: number, page: number = 1) => {
-  const { data } = await instance.get("discover/movie", {
-    params: { page, ...(genreId ? { with_genres: genreId } : {}) }
-  });
+
+export const getFetchGenre = async (selectedGenres: number[], page: number) => {
+  const { data } = await instance.get(
+    `/discover/movie?language=en&with_genres=${selectedGenres.join(
+      ","
+    )}&page=${page}&api_key=ed40c9caeaf1b576a8d758395b370665`
+  );
   return data;
 };
 
 export const getGenres = async () => {
   const { data } = await instance.get("genre/movie/list");
-  return data; // TMDB API нь { genres: [{ id: number, name: string }] } хэлбэрээр өгөгдөл буцаана
-};
-
-
-
-// 🎬 Popular Movies
-export const getPopularMovies = async (page: number = 1, genreId?: number) => {
-  const { data } = await instance.get("movie/popular", { 
-    params: { page, ...(genreId && { with_genres: genreId }) }
-  });
   return data;
 };
 
+// 🎬 Popular Movies
+export const getPopularMovies = async (page: number = 1, genreId?: number) => {
+  const { data } = await instance.get("movie/popular", {
+    params: { page, ...(genreId && { with_genres: genreId }) },
+  });
+  return data;
+};
 
 // 🎬 Upcoming Movies
 export const getUpComingMovies = async (page: number = 1) => {
   const { data } = await instance.get("movie/upcoming", { params: { page } });
   return data;
 };
-
 
 export const getTopRatedMovies = async (page = 1) => {
   const { data } = await instance.get(`movie/top_rated`, {

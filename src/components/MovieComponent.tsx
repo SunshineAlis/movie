@@ -2,7 +2,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaStar } from "react-icons/fa";
-import { getPopularMovies, getTopRatedMovies, getUpComingMovies } from "@/utils/requests"; // ✅ Нэг мөрөнд импорт хийсэн
+import {
+  getPopularMovies,
+  getTopRatedMovies,
+  getUpComingMovies,
+} from "@/utils/requests";
 
 interface Movie {
   id: number;
@@ -12,7 +16,11 @@ interface Movie {
   overview: string;
 }
 
-const MovieComponent = ({ selectedCategory }: { selectedCategory?: string }) => {
+const MovieComponent = ({
+  selectedCategory,
+}: {
+  selectedCategory?: string;
+}) => {
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
   const [topRatedMovies, setTopRatedMovies] = useState<Movie[]>([]);
   const [upComingMovies, setUpComingMovies] = useState<Movie[]>([]);
@@ -30,7 +38,8 @@ const MovieComponent = ({ selectedCategory }: { selectedCategory?: string }) => 
           getUpComingMovies(),
         ]);
 
-        if (isMounted) { // ✅ Компонент unmount болсон эсэхийг шалгах
+        if (isMounted) {
+          //
           setPopularMovies(popular.results.slice(0, 10));
           setTopRatedMovies(topRated.results.slice(0, 10));
           setUpComingMovies(upcoming.results.slice(0, 10));
@@ -43,7 +52,7 @@ const MovieComponent = ({ selectedCategory }: { selectedCategory?: string }) => 
     getData();
 
     return () => {
-      isMounted = false; // ✅ Component unmount үед state update хийхээс сэргийлэх
+      isMounted = false; // ✅
     };
   }, []);
 
@@ -53,7 +62,11 @@ const MovieComponent = ({ selectedCategory }: { selectedCategory?: string }) => 
       {[
         { title: "Upcoming Movies", movies: upComingMovies, path: "/upcoming" },
         { title: "Popular Movies", movies: popularMovies, path: "/popular" },
-        { title: "Top Rated Movies", movies: topRatedMovies, path: "/topRated" },
+        {
+          title: "Top Rated Movies",
+          movies: topRatedMovies,
+          path: "/topRated",
+        },
       ].map(({ title, movies, path }) => (
         <div key={title}>
           <div className="flex justify-between items-center mb-5">
@@ -76,7 +89,9 @@ const MovieComponent = ({ selectedCategory }: { selectedCategory?: string }) => 
                 <h3 className="text-black text-lg mt-2">{movie.title}</h3>
                 <div className="flex items-center mt-1">
                   <FaStar className="text-yellow-500" />
-                  <span className="text-black ml-1">{movie.vote_average}/10</span>
+                  <span className="text-black ml-1">
+                    {movie.vote_average}/10
+                  </span>
                 </div>
               </div>
             ))}
