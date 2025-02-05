@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getPopularMovies } from "@/utils/requests"; //
 import { Pagination } from "@/components/Pagination";
+import Link from "next/link";
 
 type Movie = {
   id: number;
@@ -19,6 +20,7 @@ export default function PopularMovies() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+
   const fetchMovies = async () => {
     try {
       const data = await getPopularMovies(page);
@@ -31,7 +33,7 @@ export default function PopularMovies() {
 
   useEffect(() => {
     fetchMovies();
-  }, [page]); //
+  }, [page]);
 
   return (
     <div className="p-6">
@@ -41,18 +43,20 @@ export default function PopularMovies() {
       {/* Movies List */}
       <div className="grid grid-cols-5 gap-6">
         {movies.map((movie) => (
-          <div key={movie.id} className="w-[200px]">
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
-              alt={movie.title}
-              className="w-[250px] h-[300px] object-cover rounded-lg"
-            />
-            <h3 className="text-black text-lg mt-2">{movie.title}</h3>
-            <div className="flex items-center mt-1">
-              <FaStar className="text-yellow-500" />
-              <span className="text-black ml-1">{movie.vote_average}/10</span>
+          <Link key={movie.id} href={`/movie/${movie.id}`}>
+            <div className="w-[200px] cursor-pointer">
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+                alt={movie.title}
+                className="w-[250px] h-[300px] object-cover rounded-lg"
+              />
+              <h3 className="text-black text-lg mt-2">{movie.title}</h3>
+              <div className="flex items-center mt-1">
+                <FaStar className="text-yellow-500" />
+                <span className="text-black ml-1">{movie.vote_average}/10</span>
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -61,3 +65,4 @@ export default function PopularMovies() {
     </div>
   );
 }
+

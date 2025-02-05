@@ -13,7 +13,8 @@ import { getGenres } from "../utils/requests";
 import DownArrow from "./DownArrow";
 import RightArrow from "./Arrow";
 
-interface Genre {
+
+type Genre = {
   id: number;
   name: string;
   title: string;
@@ -21,7 +22,7 @@ interface Genre {
   poster_path?: string;
 }
 
-interface Movie {
+type Movie = {
   id: number;
   name: string;
   title: string;

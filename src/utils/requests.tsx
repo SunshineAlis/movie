@@ -12,7 +12,29 @@ const instance = axios.create({
   params: { api_key: API_KEY },
 });
 
-//  genreId
+//movieDetial
+
+export const getFetchMovie= async (id:number)=>{
+  const {data} = await instance.get( `/movie/${id}?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
+return data;
+}
+
+export const getMovieVideos = async (id: number) => {
+  const { data } = await instance.get(`/movie/${id}/videos?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
+  return data;
+};
+
+
+export const getSimilarMovies = async (id: number) => {
+  const { data } = await instance.get(`/movie/${id}/similar?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
+  return data.results; // Зөвхөн кинонуудын жагсаалтыг буцаана
+};
+
+export const getMovieCredits = async (id: number) => {
+  const { data } = await instance.get(`/movie/${id}/credits?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
+  return data;
+};
+
 
 export const getFetchGenre = async (selectedGenres: number[], page: number) => {
   const { data } = await instance.get(
