@@ -17,7 +17,6 @@ interface Genre {
 
 const CategoryPage = () => {
   const router = useRouter();
-
   const searchParams = useSearchParams();
   const genreQuery = searchParams?.get("genres");
 
