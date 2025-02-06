@@ -1,64 +1,51 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { FaStar } from "react-icons/fa";
 import {
   getFetchMovie,
   getMovieCredits,
   getSimilarMovies,
   getMovieVideos,
 } from "@/utils/requests";
-import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { FaStar } from "react-icons/fa";
 
 const MovieDetail = () => {
   const params = useParams();
   const id = params?.id as string;
   const [movie, setMovie] = useState<any>(null);
-  const [director, setDirector] = useState<string | null>(null);
-  const [writers, setWriters] = useState<string | null>(null);
+  const [director, setDirector] = useState<string>("Unknown");
+  const [writers, setWriters] = useState<string>("Unknown");
   const [stars, setStars] = useState<string[]>([]);
   const [similarMovies, setSimilarMovies] = useState<any[]>([]);
   const [trailerKey, setTrailerKey] = useState<string | null>(null);
 
-  // Utility function for runtime conversion
-  const convertRuntime = (minutes: number) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours}h ${mins}m`;
-  };
   useEffect(() => {
     const fetchMovieDetails = async () => {
       if (!id) return;
 
       try {
-        // Киноны мэдээллийг авна
         const data = await getFetchMovie(Number(id));
         setMovie(data);
 
-        // Киноны ажилтнуудыг (Director, Writer) авах
         const credits = await getMovieCredits(Number(id));
-
-        // Director болон Writers мэдээллийг авах
-        const directorData = credits.director; //
-        const writersData = credits.writers; //
-
-        // Director-ийн нэрийг state-д хадгалах
-        setDirector(directorData || "Unknown");
-
-        //
-        setWriters(writersData || "Unknown");
-
-        // Тоглогчдыг авна
-        const actors = credits.cast.slice(0, 5).map((actor: any) => actor.name);
-        setStars(actors);
+        setDirector(
+          credits.crew.find((member: any) => member.job === "Director")?.name || "Unknown"
+        );
+        setWriters(
+          credits.crew
+            .filter((member: any) => member.job === "Writer")
+            .map((writer: any) => writer.name)
+            .join(", ") || "Unknown"
+        );
+        setStars(credits.cast?.slice(0, 5).map((actor: any) => actor.name) || []);
 
         const similar = await getSimilarMovies(Number(id));
         setSimilarMovies(similar.slice(0, 5));
 
-        // Киноны трейлерийг авна
         const videoData = await getMovieVideos(Number(id));
         const trailerVideo = videoData.results?.find(
           (video: any) => video.type === "Trailer" && video.site === "YouTube"
@@ -72,129 +59,79 @@ const MovieDetail = () => {
     fetchMovieDetails();
   }, [id]);
 
-  const formatVoteCount = (count: number) => {
-    if (count >= 1000000) {
-      return (count / 1000000).toFixed(1) + "M"; // For millions
-    } else if (count >= 1000) {
-      return (count / 1000).toFixed(1) + "k"; // For thousands
-    }
-    return count.toString(); // If less than 1000, just return the number
-  };
+  const convertRuntime = (minutes: number) => `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+  const formatVoteCount = (count: number) =>
+    count >= 1_000_000 ? (count / 1_000_000).toFixed(1) + "M" : count >= 1_000 ? (count / 1_000).toFixed(1) + "k" : count.toString();
 
   if (!movie) return <div>Loading...</div>;
 
   return (
-    <div className="w-[1200px] w-[100%] m-auto">
+    <div className="w-full max-w-[1200px] mx-auto dark:text-white">
       <Header />
-      <div className="mr-[10px] ml-[50px] flex flex-col gap-[10px]">
+      <div className="mr-10 ml-12 flex flex-col gap-4">
         <div className="flex justify-between">
           <div>
-            <h2 className="text-3xl font-bold">{movie.title}</h2>
-            <div className="flex items-center gap-[5px]">
-              <h2 className=" text-xl">{movie.release_date} </h2>
-              <p className="w-[4px] h-[4px] rounded-full bg-black "></p>
-              <h2 className=" text-xl">PG</h2>
-              <p className="w-[4px] h-[4px] rounded-full bg-black"></p>
-              <h2 className=" text-xl">{convertRuntime(movie.runtime)}</h2>
+            <h2 className="text-3xl font-bold dark:text-white">{movie.title}</h2>
+            <div className="flex items-center gap-2 text-xl">
+              <h2>{movie.release_date}</h2>
+              <span className="w-1 h-1 bg-black rounded-full dark:text-white"></span>
+              <h2>PG</h2>
+              <span className="w-1 h-1 bg-black rounded-full dark:text-white"></span>
+              <h2>{convertRuntime(movie.runtime)}</h2>
             </div>
           </div>
-          <div>
-            <strong className="ml-[15px]">Rating:</strong>
-            <div className="flex items-center gap-[10px]">
-              <FaStar className="text-yellow-500 text-4xl" />
-              <div>
-                <p>
-                  {" "}
-                  {movie.vote_average}{" "}
-                  <span className="text-blue-600">/10</span>
-                </p>
-                <p className="text-center">
-                  {formatVoteCount(movie.vote_count)}
-                </p>
-              </div>
+          <div className="flex items-center gap-3 dark:text-white">
+            <FaStar className="text-yellow-500 text-4xl " />
+            <div>
+              <p>{movie.vote_average} <span className="text-blue-600 dark:text-white">/10</span></p>
+              <p className="text-center dark:text-white">{formatVoteCount(movie.vote_count)}</p>
             </div>
           </div>
         </div>
-        <div className="flex space-x-2 gap-6 w-full mr-[50px] ml-[20px]">
-          {/* Кино постер */}
-          <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={movie.title}
-            className="w-[20%] h-[400px] rounded-lg"
-          />
-
-          {/* 🎥 Трейлер */}
+        <div className="flex gap-6 w-full dark:text-white">
+          <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className="w-1/5 h-96 rounded-lg" />
           {trailerKey && (
-            <div className="flex-1">
-              <iframe
-                className="w-[100%] h-[400px] rounded-lg"
-                src={`https://www.youtube.com/embed/${trailerKey}`}
-                allowFullScreen
-              ></iframe>
-            </div>
+            <iframe className="w-full h-96 rounded-lg" src={`https://www.youtube.com/embed/${trailerKey}`} allowFullScreen></iframe>
           )}
-        </div>{" "}
-        <div className="flex gap-4 flex-wrap mt-2">
+        </div>
+        <div className="flex flex-wrap gap-4 dark:text-white">
           {movie.genres.map((genre: any) => (
-            <span
-              key={genre.id}
-              className=" bg-white border text-black py-1 px-5 rounded-2xl text-xs font-bold"
-            >
-              {genre.name}
-            </span>
+            <span key={genre.id} className="bg-white border text-black dark:text-white py-1 px-5 rounded-2xl text-xs font-bold">{genre.name}</span>
           ))}
-
-          <div className="flex flex-col gap-[10px]">
-            <p className="text-lg">{movie.overview}</p>
-            <div className="flex ">
-              <strong>Director:</strong>
-              <p className="ml-[50px]">{director}</p>
-            </div>
-            <p className="w-[99%] flex items-center h-[2px] border "></p>
-            <div className="flex ">
-              <strong>Writers:</strong>
-              <p className="ml-[55px]">{writers}</p>
-            </div>
-            <p className="w-[99%] flex items-center h-[2px] border "></p>
-            <div className="flex">
-              <strong>Stars:</strong>
-              <p className="ml-[69px] flex gap-[10px]">
-                {stars.map((star, index) => (
-                  <p key={index} className="flex items-center gap-[5px]">
-                    {star}{" "}
-                    <p className="w-[5px] h-[5px] rounded-full bg-black m-[5px]"></p>
-                  </p>
-                ))}
-              </p>
-            </div>
-            <p className="w-[99%] flex items-center h-[2px] border "></p>
-          </div>
-          <div className="w-[100%]">
-            <div className="flex justify-between ">
-              <h3 className="text-2xl font-bold mt-3">More Like This</h3>
-              <button
-                // onClick={() => router.push(path)}
-                className="text-white bg-gray-500 px-4 py-2 rounded-lg hover:bg-gray-700"
-              >
+        </div>
+        <p className="text-lg dark:text-white">{movie.overview}</p>
+        <div className="space-y-2 dark:text-white">
+          <p><strong>Director:</strong> {director}</p>
+          <p><strong>Writers:</strong> {writers}</p>
+          <p><strong>Stars:</strong> {stars.join(", ")}</p>
+        </div>
+        <div className="w-full dark:text-white">
+          <div className="flex justify-between dark:text-white">
+            <h3 className="text-2xl font-bold mt-3 dark:text-white">More Like This</h3>
+            <Link href={`/morelike/${id}`}>
+              <button className=" dark:text-white text-white bg-gray-400 border px-2 rounded-lg hover:bg-gray-700">
                 See More
               </button>
-            </div>
-
-            <div className="grid grid-cols-5 gap-4 mt-4">
+            </Link>
+          </div>
+          {similarMovies.length > 0 ? (
+            <div className="grid grid-cols-5 gap-4 mt-4 dark:text-white">
               {similarMovies.map((similarMovie) => (
                 <Link key={similarMovie.id} href={`/movie/${similarMovie.id}`}>
-                  <div className="w-[200px] cursor-pointer">
-                    <img
-                      src={`https://image.tmdb.org/t/p/w500${similarMovie.poster_path}`}
-                      alt={similarMovie.title}
-                      className="w-[200px] h-[300px] object-cover rounded-lg"
-                    />
-                    <h4 className="text-lg mt-2">{similarMovie.title}</h4>
+                  <div className="w-48 cursor-pointer">
+                    <img src={`https://image.tmdb.org/t/p/w500${similarMovie.poster_path}`} alt={similarMovie.title} className="w-48 h-72 object-cover rounded-lg" />
+                    <div className=" dark:text-white flex items-center gap-2 mt-2">
+                      <FaStar className=" dark:text-white text-yellow-500 text-xl" />
+                      <p>{similarMovie.vote_average} <span className="text-blue-600">/10</span></p>
+                    </div>
+                    <h4 className=" dark:text-white mt-2 text-start">{similarMovie.title}</h4>
                   </div>
                 </Link>
               ))}
             </div>
-          </div>
+          ) : (
+            <p className="text-gray-500 mt-4 dark:text-white">No similar movies found.</p>
+          )}
         </div>
         <Footer />
       </div>

@@ -7,8 +7,9 @@ import {
   getTopRatedMovies,
   getUpComingMovies,
 } from "@/utils/requests";
+import Link from "next/link";
 
-interface Movie {
+type Movie = {
   id: number;
   title: string;
   vote_average: number;
@@ -57,7 +58,7 @@ const MovieComponent = ({
   }, []);
 
   return (
-    <div className="w-full px-10 py-5 relative">
+    <div className="w-full px-10 py-5 relative dark:text-white">
       {/* Dynamic Movie List Rendering */}
       {[
         { title: "Upcoming Movies", movies: upComingMovies, path: "/upcoming" },
@@ -70,7 +71,7 @@ const MovieComponent = ({
       ].map(({ title, movies, path }) => (
         <div key={title}>
           <div className="flex justify-between items-center mb-5">
-            <h2 className="text-black text-2xl font-bold">{title}</h2>
+            <h2 className="text-black text-2xl font-bold dark:text-white">{title}</h2>
             <button
               onClick={() => router.push(path)}
               className="text-white bg-gray-500 px-4 py-2 rounded-lg hover:bg-gray-700"
@@ -79,21 +80,24 @@ const MovieComponent = ({
             </button>
           </div>
           <div className="grid grid-cols-5 gap-6">
+          
             {movies.map((movie) => (
-              <div key={movie.id} className="w-[200px]">
+              <Link key={movie.id} href={`/movie/${movie.id}`}>
+              <div  className="w-[200px] cursor-pointer">
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
                   alt={movie.title}
                   className="w-full h-[300px] object-cover rounded-lg"
                 />
-                <h3 className="text-black text-lg mt-2">{movie.title}</h3>
-                <div className="flex items-center mt-1">
+                <h3 className="text-black text-lg mt-2 dark:text-white">{movie.title}</h3>
+                <div className="flex items-center mt-1 dark:text-white">
                   <FaStar className="text-yellow-500" />
-                  <span className="text-black ml-1">
+                  <span className="text-black ml-1 dark:text-white">
                     {movie.vote_average}/10
                   </span>
                 </div>
               </div>
+             </Link>
             ))}
           </div>
         </div>
@@ -103,3 +107,5 @@ const MovieComponent = ({
 };
 
 export default MovieComponent;
+
+

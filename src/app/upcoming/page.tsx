@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getUpComingMovies } from "../../utils/requests";
 import { Pagination } from "@/components/Pagination";
+import Link from "next/link";
 interface Movie {
   id: number;
   title: string;
@@ -32,27 +33,29 @@ export default function UpcomingMovies() {
   }, [page]);
 
   return (
-    <div className="mr-[10px] ml-[10px]">
+    <div className="mr-[10px] ml-[10px] dark:text-white">
       <Header />
-      <h1 className="text-2xl font-bold mb-4">Upcoming Movies</h1>
+      <h1 className="text-2xl font-bold mb-4 dark:text-white">Upcoming Movies</h1>
       <div className="grid grid-cols-5 gap-4">
         {movies.map((movie) => (
-          <div key={movie.id} className="w-[200px]">
+          <Link key={movie.id} href={`/movie/${movie.id}`}>
+          <div  className=" cursor-pointer w-[200px] dark:text-white">
             <img
               src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
               alt={movie.title}
               className="w-full h-[300px] object-cover rounded-lg"
             />
-            <h3 className="text-black text-lg mt-2">{movie.title}</h3>
-            <div className="flex items-center mt-1">
-              <FaStar className="text-yellow-500" />
-              <span className="text-black ml-1">{movie.vote_average}/10</span>
+            <h3 className="text-black text-lg mt-2 dark:text-white">{movie.title}</h3>
+            <div className="flex items-center mt-1 dark:text-white">
+              <FaStar className="text-yellow-500 " />
+              <span className="text-black ml-1 dark:text-white">{movie.vote_average}/10</span>
             </div>
           </div>
+          </Link>
         ))}
       </div>
 
-      <Pagination fetchData={fetchMovies} totalPages={totalPages} />
+      <Pagination fetchData={setPage} totalPages={totalPages} />
       <Footer />
     </div>
   );

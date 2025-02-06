@@ -29,6 +29,10 @@ export const getSimilarMovies = async (id: number) => {
   const { data } = await instance.get(`/movie/${id}/similar?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
   return data.results; // Зөвхөн кинонуудын жагсаалтыг буцаана
 };
+//  export const getMoreLikeMovies = async (id: number) => {
+//   const { data } = await instance.get(`/movie/${id}/similar?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
+//   return data.results; // Зөвхөн кинонуудын жагсаалтыг буцаана
+// };
 
 export const getMovieCredits = async (id: number) => {
   const { data } = await instance.get(`/movie/${id}/credits?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
@@ -44,6 +48,15 @@ export const getFetchGenre = async (selectedGenres: number[], page: number) => {
   );
   return data;
 };
+
+export const getMoreLikeMovies = async (id: number, page: number = 1) => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${process.env.API_KEY}&language=en-US&page=${page}`
+  );
+  const data = await response.json();
+  return data;
+};
+
 
 export const getGenres = async () => {
   const { data } = await instance.get("genre/movie/list");
