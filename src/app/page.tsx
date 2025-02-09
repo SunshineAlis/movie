@@ -5,7 +5,10 @@ import Footer from "@/components/Footer";
 import MovieSlide from "@/components/MovieSlide";
 import MovieComponent from "@/components/MovieComponent";
 
+
 const Home = () => {
+
+
   return (
     <div>
       <Header />

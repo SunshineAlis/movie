@@ -8,14 +8,8 @@ import {
   getUpComingMovies,
 } from "@/utils/requests";
 import Link from "next/link";
+import { Movie } from "@/types";
 
-type Movie = {
-  id: number;
-  title: string;
-  vote_average: number;
-  backdrop_path: string;
-  overview: string;
-}
 
 const MovieComponent = ({
   selectedCategory,
@@ -29,7 +23,7 @@ const MovieComponent = ({
   const router = useRouter();
 
   useEffect(() => {
-    let isMounted = true; // ✅ Cleanup function-д ашиглах хувьсагч
+    let isMounted = true; // 
 
     const getData = async () => {
       try {
@@ -46,7 +40,7 @@ const MovieComponent = ({
           setUpComingMovies(upcoming.results.slice(0, 10));
         }
       } catch (error) {
-        console.error("Киноны мэдээллийг авахад алдаа гарлаа:", error);
+        console.error(" Aлдаа гарлаа:", error);
       }
     };
 
@@ -59,7 +53,6 @@ const MovieComponent = ({
 
   return (
     <div className="w-full px-10 py-5 relative dark:text-white">
-      {/* Dynamic Movie List Rendering */}
       {[
         { title: "Upcoming Movies", movies: upComingMovies, path: "/upcoming" },
         { title: "Popular Movies", movies: popularMovies, path: "/popular" },

@@ -10,12 +10,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Pagination } from "@/components/Pagination";
 import Link from "next/link"; 
-
-interface Genre {
-  id: number;
-  name: string;
-  page:number;
-}
+import { Genre } from "@/types";
 
 const CategoryPage = () => {
   const router = useRouter(); 
@@ -30,73 +25,64 @@ const CategoryPage = () => {
   const [genres, setGenres] = useState<Genre[]>([]);
   const [totalResults, setTotalResults] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [page, setPage] = useState<number>(Number(pageQuery) || 1);
+  const [page, setPage] = useState<number>(1);
+  const fetchGenres = async () => {
+    try {
+      const data = await getGenres();
+      setGenres(data.genres || []);
+    } catch (error) {
+      console.error("Error fetching genres:", error);
+    }
+  };
+  useEffect(() => {
+    fetchGenres();
+  }, []);
 
+  
+  const fetchGenreMovies = async () => {
+    if (selectedGenres.length === 0) {
+      setGenreMovies([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    try {
+      const data = await getFetchGenre(selectedGenres, page);
+      console.log("Fetched movies for page:", page, data);
+
+      if (data.success === false) {
+        console.error("TMDB API Error:", data.status_message);
+      } else {
+        setGenreMovies(data.results || []);
+        setTotalResults(data.total_results);
+        setTotalPages(data.total_pages);
+      }
+    } catch (error) {
+      console.error("Error fetching genre movies:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchGenreMovies();
+  }, [ selectedGenres, page]);
   useEffect(() => {
     if (genreQuery) {
       const genresArray = genreQuery.split(",").map(Number);
       setSelectedGenres(genresArray);
     }
   }, [genreQuery]);
-
-  useEffect(() => {
-    const fetchGenreMovies = async () => {
-      if (selectedGenres.length === 0) {
-        setGenreMovies([]);
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true);
-      try {
-        const data = await getFetchGenre(selectedGenres, page);
-        console.log("Fetched movies for page:", page, data);
-
-        if (data.success === false) {
-          console.error("TMDB API Error:", data.status_message);
-        } else {
-          setGenreMovies(data.results || []);
-          setTotalResults(data.total_results);
-          setTotalPages(data.total_pages);
-        }
-      } catch (error) {
-        console.error("Error fetching genre movies:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGenreMovies();
-  }, [selectedGenres, page]);
-
-  useEffect(() => {
-    const fetchGenres = async () => {
-      try {
-        const data = await getGenres();
-        setGenres(data.genres || []);
-      } catch (error) {
-        console.error("Error fetching genres:", error);
-      }
-    };
-
-    fetchGenres();
-  }, []);
-
+  
   const handleGenreSelect = (genreId: number) => {
     let updatedGenres = selectedGenres.includes(genreId)
       ? selectedGenres.filter((id) => id !== genreId)
       : [...selectedGenres, genreId];
 
     console.log("Updated Genres:", updatedGenres);
-    router.push(`/category?genres=${updatedGenres.join(",")}&page=1`);
+    router.push(`/category?genres=${updatedGenres.join(",")}&page=${page}`);
   };
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage); 
-    router.push(`/category?genres=${selectedGenres.join(",")}&page=${newPage}`); 
-    console.log("New Page:", newPage);
-  };
-
+ 
   if (loading) return <div>Loading...</div>;
 
   return (
@@ -159,7 +145,7 @@ const CategoryPage = () => {
                 ))}
               </ul>
             )}
-            <Pagination fetchData={handlePageChange} totalPages={totalPages} />
+            <Pagination fetchData={setPage} totalPages={totalPages} />
           </div>
         </div>
       </div>

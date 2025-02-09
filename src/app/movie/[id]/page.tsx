@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@/utils/requests";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
 
 const MovieDetail = () => {
   const params = useParams();
@@ -48,7 +49,7 @@ const MovieDetail = () => {
 
         const videoData = await getMovieVideos(Number(id));
         const trailerVideo = videoData.results?.find(
-          (video: any) => video.type === "Trailer" && video.site === "YouTube"
+          (video: any) => video.type.toLowerCase() === "trailer" && video.site === "youTube"
         );
         setTrailerKey(trailerVideo ? trailerVideo.key : null);
       } catch (error) {
@@ -94,9 +95,9 @@ const MovieDetail = () => {
             <iframe className="w-full h-96 rounded-lg" src={`https://www.youtube.com/embed/${trailerKey}`} allowFullScreen></iframe>
           )}
         </div>
-        <div className="flex flex-wrap gap-4 dark:text-white">
+        <div className="flex flex-wrap gap-4 ">
           {movie.genres.map((genre: any) => (
-            <span key={genre.id} className="bg-white border text-black dark:text-white py-1 px-5 rounded-2xl text-xs font-bold">{genre.name}</span>
+            <span key={genre.id} className="bg-white border text-black py-1 px-5 rounded-2xl text-xs font-bold">{genre.name}</span>
           ))}
         </div>
         <p className="text-lg dark:text-white">{movie.overview}</p>
@@ -116,7 +117,7 @@ const MovieDetail = () => {
           </div>
           {similarMovies.length > 0 ? (
             <div className="grid grid-cols-5 gap-4 mt-4 dark:text-white">
-              {similarMovies.map((similarMovie) => (
+              {similarMovies.map((similarMovie:any) => (
                 <Link key={similarMovie.id} href={`/movie/${similarMovie.id}`}>
                   <div className="w-48 cursor-pointer">
                     <img src={`https://image.tmdb.org/t/p/w500${similarMovie.poster_path}`} alt={similarMovie.title} className="w-48 h-72 object-cover rounded-lg" />

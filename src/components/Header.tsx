@@ -6,16 +6,18 @@ import { useTheme } from "next-themes";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Search from "@/components/Search";
 import Genre from "@/components/Genre";
-
+import { useRouter } from "next/navigation";
 
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
   return (
     <div className="bg-white  flex items-center gap-[10%] p-4 dark:bg-gray-900">
 
         {/* movieLogo */}
-        <div className="flex items-center ml-[5%] w-[20%]">
+        <div className="flex items-center ml-[5%] w-[20%] cursor-pointer"
+         onClick={() => router.push("/")}>
           <MovieLogo width={30} height={30} className="text-[#4338CA]" />
           <p className="mb-[5px] text-xl font-semibold italic text-[#4338CA] dark:text-white">
             Movie Z

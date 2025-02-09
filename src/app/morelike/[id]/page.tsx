@@ -8,20 +8,13 @@ import Footer from "@/components/Footer";
 import { getMoreLikeMovies } from "@/utils/requests"; // Function to fetch similar movies
 import Link from "next/link";
 import { Pagination } from "@/components/Pagination"; // Pagination component
-
-interface Movie {
-  id: number;
-  title: string;
-  vote_average: number;
-  backdrop_path: string;
-  overview: string;
-}
+import { Movie } from "@/types";
 
 export default function MoreLike() {
   const params = useParams();
   
   // Ensure the ID is parsed correctly
-  const id = params?.id ? parseInt(params.id, 10) : null;
+  const id = params?.id as string;  
   console.log("Params:", params);  // 
 
   
@@ -34,7 +27,7 @@ export default function MoreLike() {
   const fetchSimilarMovies = async () => {
     try {
       if (!id) return; // Ensure id is available
-      const data = await getMoreLikeMovies(id, page); // 
+      const data = await getMoreLikeMovies(Number(id ) , page); // 
       console.log("Similar Movies:", data); //
       setSimilarMovies(data.results); // 
       setTotalPages(data.total_pages); //
@@ -48,12 +41,10 @@ export default function MoreLike() {
   }, [id, page]); //
 
  
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage); // 
-  };
+
 
   return (
-    <div className="p-6 dark:text-white">
+    <div className=" dark:text-white">
       <Header />
       <h1 className="text-2xl font-bold dark:text-white">More Like This</h1>
 

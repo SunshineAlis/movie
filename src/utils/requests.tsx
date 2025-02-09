@@ -27,12 +27,9 @@ export const getMovieVideos = async (id: number) => {
 
 export const getSimilarMovies = async (id: number) => {
   const { data } = await instance.get(`/movie/${id}/similar?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
-  return data.results; // Зөвхөн кинонуудын жагсаалтыг буцаана
+  return data.results; 
 };
-//  export const getMoreLikeMovies = async (id: number) => {
-//   const { data } = await instance.get(`/movie/${id}/similar?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
-//   return data.results; // Зөвхөн кинонуудын жагсаалтыг буцаана
-// };
+
 
 export const getMovieCredits = async (id: number) => {
   const { data } = await instance.get(`/movie/${id}/credits?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
@@ -58,10 +55,14 @@ export const getMoreLikeMovies = async (id: number, page: number = 1) => {
 };
 
 
-export const getGenres = async () => {
-  const { data } = await instance.get("genre/movie/list");
+export const getGenres = async (page: number = 1, genreId?: number) => {
+  const { data } = await instance.get("genre/movie/list", {
+    params: { page, ...(genreId && { with_genres: genreId }) },
+  });
   return data;
 };
+
+
 
 // 🎬 Popular Movies
 export const getPopularMovies = async (page: number = 1, genreId?: number) => {

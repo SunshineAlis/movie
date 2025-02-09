@@ -6,13 +6,7 @@ import Footer from "@/components/Footer";
 import { getUpComingMovies } from "../../utils/requests";
 import { Pagination } from "@/components/Pagination";
 import Link from "next/link";
-interface Movie {
-  id: number;
-  title: string;
-  vote_average: number;
-  backdrop_path: string;
-  overview: string;
-}
+import { Movie } from "@/types";
 
 export default function UpcomingMovies() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -31,7 +25,7 @@ export default function UpcomingMovies() {
   useEffect(() => {
     fetchMovies();
   }, [page]);
-
+console.log(fetchMovies);
   return (
     <div className="mr-[10px] ml-[10px] dark:text-white">
       <Header />

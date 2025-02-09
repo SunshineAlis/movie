@@ -3,13 +3,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { FaSearch } from "react-icons/fa";
+import { Movie } from "@/types";
 
-type Movie = {
-  id: number;
-  title: string;
-  release_date?: string;
-  poster_path?: string;
-};
 
 export default function Search() {
   const router = useRouter();

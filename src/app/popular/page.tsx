@@ -7,14 +7,7 @@ import Footer from "@/components/Footer";
 import { getPopularMovies } from "@/utils/requests";
 import { Pagination } from "@/components/Pagination";
 import Link from "next/link";
-
-type Movie = {
-  id: number;
-  title: string;
-  vote_average: number;
-  backdrop_path: string;
-  overview: string;
-};
+import { Movie } from "@/types";
 
 export default function PopularMovies() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -36,7 +29,7 @@ export default function PopularMovies() {
   }, [page]); // Зөвхөн page өөрчлөгдөх үед fetch хийх
 
   return (
-    <div className="p-6 dark:text-white">
+    <div className=" dark:text-white">
       <Header />
       <h1 className="text-2xl font-bold mb-4 dark:text-white">Popular Movies</h1>
 

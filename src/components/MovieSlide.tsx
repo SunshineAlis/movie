@@ -6,14 +6,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import Link from "next/link";
-
-interface Movie {
-  id: number;
-  title: string;
-  vote_average: number;
-  backdrop_path: string;
-  overview: string;
-}
+import { Movie } from "@/types";
 
 const MovieComponent = () => {
   const [movies, setMovies] = useState<Movie[]>([]);

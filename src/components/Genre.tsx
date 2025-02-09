@@ -3,15 +3,9 @@ import { useRouter } from "next/navigation";
 import { getGenres } from "../utils/requests";
 import DownArrow from "./DownArrow";
 import RightArrow from "./Arrow";
+import { Genre } from "@/types";
 
-type Genre = {
-    id: number;
-    name: string;
-    title: string;
-    release_date?: string;
-    poster_path?: string;
-  };
-  
+
     export default function GenreButton() {
 
     const router = useRouter();
@@ -19,25 +13,23 @@ type Genre = {
     const [genres, setGenres] = useState<Genre[]>([]);
     const [showGenres, setShowGenres] = useState(false);
     const [selectedGenre, setSelectedGenre] = useState<number | undefined>();
+    
+    const fetchGenres = async () => {
+      try {
+        const data = await getGenres();
+        setGenres(data.genres || []);
+      } catch (error) {
+        console.error("Error fetching genres:", error);
+      }
+    };
     useEffect(() => {
-        const fetchGenres = async () => {
-          try {
-            const data = await getGenres();
-            setGenres(data.genres || []);
-          } catch (error) {
-            console.error("Error fetching genres:", error);
-          }
-        };
-    
         fetchGenres();
-      }, []);
+      }, [] );
     
-      // Toggle genre dropdown visibility
       const toggleGenreList = () => {
         setShowGenres(!showGenres);
       };
-    
-      // Handle genre selection
+
       const handleGenreSelect = (genreId: number) => {
         setSelectedGenre(genreId);
         router.push(`/category/?genres=${genreId}`);
