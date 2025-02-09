@@ -15,24 +15,32 @@ const instance = axios.create({
 //movieDetial
 
 export const getFetchMovie= async (id:number)=>{
-  const {data} = await instance.get( `/movie/${id}?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
+  const {data} = await instance.get( `/movie/${id}?api_key=${API_KEY}`);
 return data;
 }
 
+//search 
+export const getSearchMovies =async (query:string)=>{
+  const {data} = await instance.get (`https://api.themoviedb.org/3/search/movie?query=${query}&language=en&api_key=${API_KEY}`);
+return data;
+}
+
+
+
 export const getMovieVideos = async (id: number) => {
-  const { data } = await instance.get(`/movie/${id}/videos?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
+  const { data } = await instance.get(`/movie/${id}/videos?api_key=${API_KEY}`);
   return data;
 };
 
 
 export const getSimilarMovies = async (id: number) => {
-  const { data } = await instance.get(`/movie/${id}/similar?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
+  const { data } = await instance.get(`/movie/${id}/similar?api_key=${API_KEY}`);
   return data.results; 
 };
 
 
 export const getMovieCredits = async (id: number) => {
-  const { data } = await instance.get(`/movie/${id}/credits?api_key=ed40c9caeaf1b576a8d758395b370665&language=en-US`);
+  const { data } = await instance.get(`/movie/${id}/credits?api_key=${API_KEY}`);
   return data;
 };
 
@@ -41,7 +49,7 @@ export const getFetchGenre = async (selectedGenres: number[], page: number) => {
   const { data } = await instance.get(
     `/discover/movie?language=en&with_genres=${selectedGenres.join(
       ","
-    )}&page=${page}&api_key=ed40c9caeaf1b576a8d758395b370665`
+    )}&page=${page}&api_key=${API_KEY}`
   );
   return data;
 };

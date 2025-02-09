@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 export const Pagination = ({
   fetchData,
   totalPages,
+  
 }: {
   fetchData: (page: number) => void; // page параметртэй
   totalPages: number;

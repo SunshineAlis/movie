@@ -1,21 +1,24 @@
 
 "use client";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation"; 
+import { useSearchParams } from "next/navigation";
 import { getFetchGenre, getGenres } from "@/utils/requests";
 import Arrow from "@/components/Arrow";
 import { FaStar } from "react-icons/fa";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Pagination } from "@/components/Pagination";
-import Link from "next/link"; 
+import Link from "next/link";
 import { Genre } from "@/types";
+import 
+Pagination
+ from "@/components/ui/pagination"
+
 
 const CategoryPage = () => {
-  const router = useRouter(); 
+  const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const genreQuery = searchParams?.get("genres");
   const pageQuery = searchParams?.get("page");
 
@@ -38,7 +41,7 @@ const CategoryPage = () => {
     fetchGenres();
   }, []);
 
-  
+
   const fetchGenreMovies = async () => {
     if (selectedGenres.length === 0) {
       setGenreMovies([]);
@@ -65,14 +68,14 @@ const CategoryPage = () => {
   };
   useEffect(() => {
     fetchGenreMovies();
-  }, [ selectedGenres, page]);
+  }, [selectedGenres, page]);
   useEffect(() => {
     if (genreQuery) {
       const genresArray = genreQuery.split(",").map(Number);
       setSelectedGenres(genresArray);
     }
   }, [genreQuery]);
-  
+
   const handleGenreSelect = (genreId: number) => {
     let updatedGenres = selectedGenres.includes(genreId)
       ? selectedGenres.filter((id) => id !== genreId)
@@ -82,7 +85,14 @@ const CategoryPage = () => {
     router.push(`/category?genres=${updatedGenres.join(",")}&page=${page}`);
   };
 
- 
+  useEffect(() => {
+    if (pageQuery) {
+      setPage(Number(pageQuery));
+    }
+  }, [pageQuery]);
+  const handlePageChange = (newPage: number) => {
+    router.push(`/category?genres=${selectedGenres.join(",")}&page=${newPage}`);
+  };
   if (loading) return <div>Loading...</div>;
 
   return (
@@ -101,9 +111,8 @@ const CategoryPage = () => {
                   <button
                     key={genre.id}
                     onClick={() => handleGenreSelect(genre.id)}
-                    className={`p-2 rounded flex items-center font-bold text-xs border hover:bg-gray-200 ${
-                      selectedGenres.includes(genre.id) ? "bg-gray-300" : ""
-                    }`}
+                    className={`p-2 rounded flex items-center font-bold text-xs border hover:bg-gray-200 ${selectedGenres.includes(genre.id) ? "bg-gray-300" : ""
+                      }`}
                   >
                     {genre.name}
                     <Arrow />
@@ -145,7 +154,15 @@ const CategoryPage = () => {
                 ))}
               </ul>
             )}
-            <Pagination fetchData={setPage} totalPages={totalPages} />
+
+
+           
+<Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
+
+
+
+
+         
           </div>
         </div>
       </div>

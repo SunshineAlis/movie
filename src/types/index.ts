@@ -15,5 +15,7 @@ export type Genre = {
         title: string;
         release_date?: string;
         poster_path?: string;
+        page:number;
+
       };
       

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { FaSearch } from "react-icons/fa";
 import { Movie } from "@/types";
+import { getSearchMovies } from "@/utils/requests";
 
 
 export default function Search() {
@@ -25,11 +26,8 @@ export default function Search() {
 
   const searchMovies = async (query: string) => {
     try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/search/movie?query=${query}&language=en&api_key=ed40c9caeaf1b576a8d758395b370665`
-      );
-      const data = await response.json();
-      setMovies(data.results || []);
+      const data = await getSearchMovies(query);
+           setMovies(data.results || []);
     } catch (error) {
       console.error("Error fetching movies:", error);
     }
