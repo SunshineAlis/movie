@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import Link from "next/link";
 import { Movie } from "@/types";
+import { getMovieVideos, getPopularMovies } from "@/utils/requests";
 
 const MovieComponent = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -14,38 +15,37 @@ const MovieComponent = () => {
   const [activeTrailer, setActiveTrailer] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch(
-      "https://api.themoviedb.org/3/movie/popular?api_key=ed40c9caeaf1b576a8d758395b370665"
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.results) {
-          setMovies(data.results.slice(0, 10));
-          data.results.slice(0, 10).forEach((movie: Movie) => {
-            fetch(
-              `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=ed40c9caeaf1b576a8d758395b370665`
-            )
-              .then((res) => res.json())
-              .then((videoData) => {
-                const trailerVideo = videoData.results?.find(
-                  (video: any) => video.key
-                );
-                setTrailer((prev) => ({
-                  ...prev,
-                  [movie.id]: trailerVideo?.key || null,
-                }));
-              })
-              .catch((error) =>
-                console.error("Видео татахад алдаа гарлаа:", error)
-              );
-          });
+    const fetchMovies = async () => {
+      try {
+        const data = await getPopularMovies();
+        const moviesList = data.results || [];
+        setMovies(moviesList);
+  
+        for (const movie of moviesList.slice(0, 10)) {
+          try {
+            const trailer = await getMovieVideos(movie.id); 
+            const trailerVideo = trailer.results?.find(
+              (video: any) => video.key
+            );
+  
+            setTrailer((prev) => ({
+              ...prev,
+              [movie.id]: trailerVideo?.key || null,
+            }));
+          } catch (error) {
+            console.error("Failed to fetch trailer movies:", error);
+          }
         }
-      })
-      .catch((error) =>
-        console.error("Киноны мэдээлэл татахад алдаа гарлаа:", error)
-      );
+      } catch (error) {
+        console.error("Failed to fetch popular movies:", error);
+      }
+    };
+  
+    fetchMovies();
   }, []);
-
+  
+  
+          
   return (
     <div className="w-full h-[500px]">
       <Swiper navigation modules={[Navigation]} className="mySwiper">

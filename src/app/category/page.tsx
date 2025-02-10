@@ -90,6 +90,7 @@ const CategoryPage = () => {
       setPage(Number(pageQuery));
     }
   }, [pageQuery]);
+  
   const handlePageChange = (newPage: number) => {
     router.push(`/category?genres=${selectedGenres.join(",")}&page=${newPage}`);
   };
