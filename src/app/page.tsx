@@ -4,15 +4,13 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MovieSlide from "@/components/MovieSlide";
 import MovieComponent from "@/components/MovieComponent";
-
+import { MovieCardSmall } from "@/components/MovieCardSmall";
 
 const Home = () => {
-
-
   return (
     <div>
       <Header />
-      <MovieSlide />
+      <MovieCardSmall />
       <MovieComponent />
       <div className="p-4">
         <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white">

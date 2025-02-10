@@ -6,28 +6,23 @@ import { FaSearch } from "react-icons/fa";
 import { Movie } from "@/types";
 import { getSearchMovies } from "@/utils/requests";
 
-
 export default function Search() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchQuery.trim()) {
-        searchMovies(searchQuery);
-      } else {
-        setMovies([]);
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
+    if (searchQuery.trim()) {
+      searchMovies(searchQuery);
+    } else {
+      setMovies([]);
+    }
   }, [searchQuery]);
 
   const searchMovies = async (query: string) => {
     try {
       const data = await getSearchMovies(query);
-           setMovies(data.results || []);
+      setMovies(data.results || []);
     } catch (error) {
       console.error("Error fetching movies:", error);
     }

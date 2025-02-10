@@ -38,7 +38,7 @@ const MovieComponent = ({
           setUpComingMovies(upcoming.results.slice(0, 10));
         }
       } catch (error) {
-        console.error(" Aлдаа гарлаа:", error);
+        console.error(" failed:", error);
       }
     };
 
@@ -62,7 +62,9 @@ const MovieComponent = ({
       ].map(({ title, movies, path }) => (
         <div key={title}>
           <div className="flex justify-between items-center mb-5">
-            <h2 className="text-black text-2xl font-bold dark:text-white">{title}</h2>
+            <h2 className="text-black text-2xl font-bold dark:text-white">
+              {title}
+            </h2>
             <button
               onClick={() => router.push(path)}
               className="text-white bg-gray-500 px-4 py-2 rounded-lg hover:bg-gray-700"
@@ -79,7 +81,9 @@ const MovieComponent = ({
                     alt={movie.title}
                     className="w-full h-[250px] sm:h-[270px] md:h-[300px] object-cover rounded-lg"
                   />
-                  <h3 className="text-black text-lg mt-2 dark:text-white">{movie.title}</h3>
+                  <h3 className="text-black text-lg mt-2 dark:text-white">
+                    {movie.title}
+                  </h3>
                   <div className="flex items-center mt-1 dark:text-white">
                     <FaStar className="text-yellow-500" />
                     <span className="text-black ml-1 dark:text-white">

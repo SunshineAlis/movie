@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 export const Pagination = ({
   fetchData,
   totalPages,
-  
 }: {
   fetchData: (page: number) => void; // page параметртэй
   totalPages: number;
@@ -23,7 +22,11 @@ export const Pagination = ({
 
   const getPaginationPages = () => {
     const pages: number[] = [];
-    for (let i = Math.max(1, page - 3); i <= Math.min(totalPages, page + 3); i++) {
+    for (
+      let i = Math.max(1, page - 3);
+      i <= Math.min(totalPages, page + 3);
+      i++
+    ) {
       pages.push(i);
     }
     return pages;
@@ -36,7 +39,9 @@ export const Pagination = ({
           onClick={() => handlePageChange(page - 1)}
           disabled={page === 1}
           className={`px-4 py-2 rounded-lg ${
-            page === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-gray-500 hover:bg-gray-700 text-white"
+            page === 1
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-gray-500 hover:bg-gray-700 text-white"
           }`}
         >
           Previous
@@ -47,7 +52,9 @@ export const Pagination = ({
             key={pageNumber}
             onClick={() => handlePageChange(pageNumber)}
             className={`px-3 py-2 ${
-              pageNumber === page ? "bg-blue-500 text-white rounded" : "bg-gray-200 hover:bg-gray-400"
+              pageNumber === page
+                ? "bg-blue-500 text-white rounded"
+                : "bg-gray-200 hover:bg-gray-400"
             }`}
           >
             {pageNumber}
@@ -58,7 +65,9 @@ export const Pagination = ({
           onClick={() => handlePageChange(page + 1)}
           disabled={page === totalPages}
           className={`px-4 py-2 rounded-lg ${
-            page === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-gray-500 hover:bg-gray-700 text-white"
+            page === totalPages
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-gray-500 hover:bg-gray-700 text-white"
           }`}
         >
           Next

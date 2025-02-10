@@ -8,9 +8,8 @@ import { Navigation } from "swiper/modules";
 import Link from "next/link";
 import { Movie } from "@/types";
 import { getMovieVideos, getPopularMovies } from "@/utils/requests";
-import { MovieCard } from "@/components/MovieCard";
 
-const MovieComponent = () => {
+export const MovieCard = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [trailer, setTrailer] = useState<{ [key: number]: string | null }>({});
   const [activeTrailer, setActiveTrailer] = useState<number | null>(null);
@@ -112,5 +111,3 @@ const MovieComponent = () => {
     </div>
   );
 };
-
-export default MovieComponent;
