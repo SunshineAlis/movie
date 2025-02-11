@@ -26,26 +26,32 @@ export default function TopRatedMovies() {
   }, [page]); //
 
   return (
-    <div className=" dark:text-white">
+    <div className=" max-w-[1200px] w-[100%] m-auto dark:text-white">
       <Header />
-      <h1 className="text-2xl font-bold mb-4 dark:text-white">Top Rated Movies</h1>
+      <h1 className="text-2xl font-bold mb-4 dark:text-white">
+        Top Rated Movies
+      </h1>
 
       {/* Movies List */}
-      <div className="grid grid-cols-5 gap-6 dark:text-white">
+      <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 md:gap-1 dark:text-white">
         {movies.map((movie) => (
-          <Link  key={movie.id} href={`/movie/${movie.id}`}>
-          <div className=" cursor-pointer w-[200px]">
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
-              alt={movie.title}
-              className="w-full h-[300px] object-cover rounded-lg"
-            />
-            <h3 className="text-black text-lg mt-2 dark:text-white">{movie.title}</h3>
-            <div className="flex items-center mt-1 dark:text-white">
-              <FaStar className="text-yellow-500" />
-              <span className="text-black ml-1 dark:text-white">{movie.vote_average}/10</span>
+          <Link key={movie.id} href={`/movie/${movie.id}`}>
+            <div className=" cursor-pointer w-[200px]">
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+                alt={movie.title}
+                className="w-full h-[300px] object-cover rounded-lg"
+              />
+              <h3 className="text-black text-lg mt-2 dark:text-white">
+                {movie.title}
+              </h3>
+              <div className="flex items-center mt-1 dark:text-white">
+                <FaStar className="text-yellow-500" />
+                <span className="text-black ml-1 dark:text-white">
+                  {movie.vote_average}/10
+                </span>
+              </div>
             </div>
-          </div>
           </Link>
         ))}
       </div>

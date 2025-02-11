@@ -47,7 +47,11 @@ const MovieComponent = () => {
 
   return (
     <div className="w-full h-[500px] sm:h-[700px] md:h-[600px] lg:h-[500px] relative">
-      <Swiper navigation modules={[Navigation]} className=" sm:flex flex-col items-center">
+      <Swiper
+        navigation
+        modules={[Navigation]}
+        className=" sm:flex flex-col items-center"
+      >
         {movies.map((movie) => (
           <SwiperSlide key={movie.id}>
             <Link href={`/movie/${movie.id}`} passHref>

@@ -8,27 +8,15 @@ import { MovieCardSmall } from "@/components/MovieCardSmall";
 import { useState, useEffect } from "react";
 
 const Home = () => {
-  const [isSmartCard, setIsSmartCard] = useState(
-    typeof window !== "undefined" && window.innerWidth >= 375 && window.innerWidth <= 950
-  );
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmartCard(window.innerWidth >= 375 && window.innerWidth <= 950);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   return (
-    <div>
+    <div className="max-w-[1200px] w-[100%] m-auto">
       <Header />
 
-      {/* Зөвхөн нэгийг нь харуулах */}
-      {isSmartCard ? <MovieCardSmall /> : <MovieSlide />}
+      {window.innerWidth >= 375 && window.innerWidth <= 950 ? (
+        <MovieCardSmall />
+      ) : (
+        <MovieSlide />
+      )}
 
       <MovieComponent />
       <div className="p-4">
@@ -39,7 +27,7 @@ const Home = () => {
           Explore movies, shows, and more.
         </p>
       </div>
-      
+
       <Footer />
     </div>
   );

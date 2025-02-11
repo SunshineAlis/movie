@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { FaStar } from "react-icons/fa";
+import { FaArrowRight, FaStar } from "react-icons/fa";
 import {
   getPopularMovies,
   getTopRatedMovies,
@@ -50,7 +50,7 @@ const MovieComponent = ({
   }, []);
 
   return (
-    <div className="w-full px-5 md:px-10 py-5 relative dark:text-white">
+    <div className="max-w-[1200px] w-[100%] m-auto mx-[2%] dark:text-white">
       {[
         { title: "Upcoming Movies", movies: upComingMovies, path: "/upcoming" },
         { title: "Popular Movies", movies: popularMovies, path: "/popular" },
@@ -61,25 +61,26 @@ const MovieComponent = ({
         },
       ].map(({ title, movies, path }) => (
         <div key={title}>
-          <div className="flex justify-between items-center mb-5">
-            <h2 className="text-black text-2xl font-bold dark:text-white">
+          <div className="flex justify-between items-center">
+            <h2 className="text-black text-2xl mx-[10px] mt-[10px] font-bold dark:text-white">
               {title}
             </h2>
             <button
               onClick={() => router.push(path)}
-              className="text-white bg-gray-500 px-4 py-2 rounded-lg hover:bg-gray-700"
+              className="flex items-center space-x-20 mt-[10px] px-4 py-2 gap-[10px] lg:text-black   mr-[20px]"
             >
               See More
+              <FaArrowRight />
             </button>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 gap-2 mx-[2%] sm:grid-cols-3 gap-2 md:grid-cols-4 gap-2 lg:grid-cols-5 gap-2 mx-[2%] md:gap-2">
             {movies.map((movie) => (
               <Link key={movie.id} href={`/movie/${movie.id}`}>
-                <div className="w-full sm:w-[160px] md:w-[200px] cursor-pointer">
+                <div className="cursor-pointer">
                   <img
                     src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
                     alt={movie.title}
-                    className="w-full h-[250px] sm:h-[270px] md:h-[300px] object-cover rounded-lg"
+                    className="h-60 object-cover rounded-lg"
                   />
                   <h3 className="text-black text-lg mt-2 dark:text-white">
                     {movie.title}

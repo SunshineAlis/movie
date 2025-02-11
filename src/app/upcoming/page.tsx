@@ -25,26 +25,32 @@ export default function UpcomingMovies() {
   useEffect(() => {
     fetchMovies();
   }, [page]);
-console.log(fetchMovies);
+  console.log(fetchMovies);
   return (
-    <div className="mr-[10px] ml-[10px] dark:text-white">
+    <div className="max-w-[1200px] w-[100%] m-auto dark:text-white">
       <Header />
-      <h1 className="text-2xl font-bold mb-4 dark:text-white">Upcoming Movies</h1>
-      <div className="grid grid-cols-5 gap-4">
+      <h1 className="text-2xl font-bold mb-4 dark:text-white">
+        Upcoming Movies
+      </h1>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2 md:grid-cols-4 md:gap-4 lg:grid-cols-5 gap-2 md:gap-2 dark:text-white">
         {movies.map((movie) => (
           <Link key={movie.id} href={`/movie/${movie.id}`}>
-          <div  className=" cursor-pointer w-[200px] dark:text-white">
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
-              alt={movie.title}
-              className="w-full h-[300px] object-cover rounded-lg"
-            />
-            <h3 className="text-black text-lg mt-2 dark:text-white">{movie.title}</h3>
-            <div className="flex items-center mt-1 dark:text-white">
-              <FaStar className="text-yellow-500 " />
-              <span className="text-black ml-1 dark:text-white">{movie.vote_average}/10</span>
+            <div className=" cursor-pointer dark:text-white">
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+                alt={movie.title}
+                className="object-cover rounded-lg"
+              />
+              <h3 className="text-black text-lg mt-2 dark:text-white">
+                {movie.title}
+              </h3>
+              <div className="flex items-center mt-1 dark:text-white">
+                <FaStar className="text-yellow-500 " />
+                <span className="text-black ml-1 dark:text-white">
+                  {movie.vote_average}/10
+                </span>
+              </div>
             </div>
-          </div>
           </Link>
         ))}
       </div>

@@ -122,7 +122,7 @@ const CategoryPage = () => {
             {genreMovies.length === 0 ? (
               <p>No movies found for the selected genres.</p>
             ) : (
-              <ul className="grid grid-cols-4 gap-6">
+              <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
                 {genreMovies.map((movie) => (
                   <Link key={movie.id} href={`/movie/${movie.id}`}>
                     <li className="mb-4 cursor-pointer">
