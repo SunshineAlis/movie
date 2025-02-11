@@ -13,7 +13,6 @@ import {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-
 const MovieDetail = () => {
   const params = useParams();
   const id = params?.id as string;
@@ -49,7 +48,7 @@ const MovieDetail = () => {
 
         const videoData = await getMovieVideos(Number(id));
         const trailerVideo = videoData.results?.find(
-          (video: any) => video.type.toLowerCase() === "trailer" && video.site === "youTube"
+          (video: any) => video.type.toLowerCase() === "trailer" && video.site.toLowerCase() === "youtube"
         );
         setTrailerKey(trailerVideo ? trailerVideo.key : null);
       } catch (error) {
@@ -72,66 +71,109 @@ const MovieDetail = () => {
       <div className="mr-10 ml-12 flex flex-col gap-4">
         <div className="flex justify-between">
           <div>
-            <h2 className="text-3xl font-bold dark:text-white">{movie.title}</h2>
+            <h2 className="text-3xl font-bold">{movie.title}</h2>
             <div className="flex items-center gap-2 text-xl">
               <h2>{movie.release_date}</h2>
-              <span className="w-1 h-1 bg-black rounded-full dark:text-white"></span>
+              <span className="w-1 h-1 bg-black rounded-full"></span>
               <h2>PG</h2>
-              <span className="w-1 h-1 bg-black rounded-full dark:text-white"></span>
+              <span className="w-1 h-1 bg-black rounded-full"></span>
               <h2>{convertRuntime(movie.runtime)}</h2>
             </div>
           </div>
-          <div className="flex items-center gap-3 dark:text-white">
-            <FaStar className="text-yellow-500 text-4xl " />
+          <div className="flex items-center gap-3">
+            <FaStar className="text-yellow-500 text-4xl" />
             <div>
-              <p>{movie.vote_average} <span className="text-blue-600 dark:text-white">/10</span></p>
-              <p className="text-center dark:text-white">{formatVoteCount(movie.vote_count)}</p>
+              <p>{movie.vote_average} <span className="text-blue-600">/10</span></p>
+              <p className="text-center">{formatVoteCount(movie.vote_count)}</p>
             </div>
           </div>
         </div>
-        <div className="flex gap-6 w-full dark:text-white">
-          <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} className="w-1/5 h-96 rounded-lg" />
+        {/* uurchlugduh heseg */}
+        <div className="sm:hidden ">
+          <div className="flex flex-col ">
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={movie.title}
+              className="w-full sm:w-1/5 h-60 sm:h-96 rounded-lg sm:hidden"
+            />
+            {trailerKey && (
+              <iframe
+                className="w-full h-56"
+                src={`https://www.youtube.com/embed/${trailerKey}`}
+                allowFullScreen
+              ></iframe>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-4">
+            {movie.genres.map((genre: any) => (
+              <span key={genre.id} className="bg-white border text-black py-1 px-5 rounded-2xl text-xs font-bold">{genre.name}</span>
+            ))}
+          </div>
+          <p className="text-lg">{movie.overview}</p>
+        </div>
+
+        {/* jijig delgetsin responsive */}
+        <div className="lg:hidden">
           {trailerKey && (
-            <iframe className="w-full h-96 rounded-lg" src={`https://www.youtube.com/embed/${trailerKey}`} allowFullScreen></iframe>
+            <iframe
+              className="w-full h-56 "
+              src={`https://www.youtube.com/embed/${trailerKey}`}
+              allowFullScreen
+            ></iframe>
           )}
+          <div className="flex">
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={movie.title}
+              className="w-full w-1/5 sm:h-96 rounded-lg "
+            />
+            <div className="flex flex-col">
+              <div className="flex flex-wrap gap-2 w-4/5 w-full">
+                {movie.genres.map((genre: any) => (
+                  <span key={genre.id} className="bg-white border text-black py-1 px-2 rounded-xl text-xs font-bold">{genre.name}</span>
+                ))}
+              </div>
+              <p className="text-lg">{movie.overview}</p></div>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-4 ">
-          {movie.genres.map((genre: any) => (
-            <span key={genre.id} className="bg-white border text-black py-1 px-5 rounded-2xl text-xs font-bold">{genre.name}</span>
-          ))}
-        </div>
-        <p className="text-lg dark:text-white">{movie.overview}</p>
-        <div className="space-y-2 dark:text-white">
+
+
+        <div className="space-y-2">
           <p><strong>Director:</strong> {director}</p>
           <p><strong>Writers:</strong> {writers}</p>
           <p><strong>Stars:</strong> {stars.join(", ")}</p>
         </div>
-        <div className="w-full dark:text-white">
-          <div className="flex justify-between dark:text-white">
-            <h3 className="text-2xl font-bold mt-3 dark:text-white">More Like This</h3>
+
+        <div className="w-full">
+          <div className="flex justify-between">
+            <h3 className="text-2xl font-bold items-center">More Like This</h3>
             <Link href={`/morelike/${id}`}>
-              <button className=" dark:text-white text-white bg-gray-400 border px-2 rounded-lg hover:bg-gray-700">
+              <button className="text-white bg-gray-400 px-3 rounded-xl items-center hover:bg-gray-500">
                 See More
               </button>
             </Link>
           </div>
           {similarMovies.length > 0 ? (
-            <div className="grid grid-cols-5 gap-4 mt-4 dark:text-white">
-              {similarMovies.map((similarMovie:any) => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mt-4">
+              {similarMovies.map((similarMovie: any) => (
                 <Link key={similarMovie.id} href={`/movie/${similarMovie.id}`}>
-                  <div className="w-48 cursor-pointer">
-                    <img src={`https://image.tmdb.org/t/p/w500${similarMovie.poster_path}`} alt={similarMovie.title} className="w-48 h-72 object-cover rounded-lg" />
-                    <div className=" dark:text-white flex items-center gap-2 mt-2">
-                      <FaStar className=" dark:text-white text-yellow-500 text-xl" />
+                  <div className="cursor-pointer">
+                    <img
+                      src={`https://image.tmdb.org/t/p/w500${similarMovie.poster_path}`}
+                      alt={similarMovie.title}
+                      className="w-48 h-72 object-cover rounded-lg"
+                    />
+                    <div className="flex items-center gap-2 mt-2">
+                      <FaStar className="text-yellow-500 text-xl" />
                       <p>{similarMovie.vote_average} <span className="text-blue-600">/10</span></p>
                     </div>
-                    <h4 className=" dark:text-white mt-2 text-start">{similarMovie.title}</h4>
+                    <h4 className="mt-2 text-start">{similarMovie.title}</h4>
                   </div>
                 </Link>
               ))}
             </div>
           ) : (
-            <p className="text-gray-500 mt-4 dark:text-white">No similar movies found.</p>
+            <p className="text-gray-500 mt-4">No similar movies found.</p>
           )}
         </div>
         <Footer />
