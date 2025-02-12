@@ -8,7 +8,9 @@ export type Movie ={
   page:number;
   release_date?: string;
   poster_path?: string;
+  index:string;
 }
+
 export type Genre = {
         id: number;
         name: string;

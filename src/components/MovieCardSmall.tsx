@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaPlay, FaStar } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -8,14 +8,25 @@ import { Navigation } from "swiper/modules";
 import Link from "next/link";
 import { Movie } from "@/types";
 import { getMovieVideos, getPopularMovies } from "@/utils/requests";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import Autoplay from "embla-carousel-autoplay";
+
 
 export const MovieCardSmall = () => {
+
   const [movies, setMovies] = useState<Movie[]>([]);
   const [trailer, setTrailer] = useState<{ [key: number]: string | null }>({});
   const [activeTrailer, setActiveTrailer] = useState<number | null>(null);
   const [expandedOverview, setExpandedOverview] = useState<{
     [key: number]: boolean;
   }>({});
+  const autoplay = useRef(Autoplay({ delay: 5000, stopOnInteraction: false }));
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -48,95 +59,89 @@ export const MovieCardSmall = () => {
   }, []);
 
   return (
-    <div className="w-[100%] max-w-[1200px] ">
-      <Swiper
-        navigation
-        modules={[Navigation]}
-        className="w-[90%] bg-white text-white"
-      >
-        {movies.map((movie) => (
-          <SwiperSlide key={movie.id}>
-            <Link href={`/movie/${movie.id}`} passHref>
-              <img
-                src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
-                alt={movie.title}
-                className="w-[100%] h-auto rounded-lg shadow-md"
-              />
-              <div className="mx-[3%]">
-                <div className="flex items-center justify-between w-[100%] text-start my-[10px]">
-                  <div className="flex flex-col gap-[2%] mx-[4%]">
-                    <h3 className="text-sm w-[200px] text-black  ml-[10px] md:text-l">
-                      Now Playing:
-                    </h3>
-                    <h3 className="text-l font-bold text-black truncate w-[90%] md:text-2xl">
-                      {movie.title}
-                    </h3>
-                  </div>
-                  <div className="flex items-center mt-2 mr-[3%] md:text-xl">
-                    <FaStar className="text-yellow-500 text-xs md:text-xl" />
-                    <p className="text-black text-xs mr-[3%] md:text-xl">
-                      {movie.vote_average}
-                      <span className="text-blue-400 mr-[3%]">/10</span>
+    <div className="w-full max-w-[1200px] mx-auto">
+      <Carousel
+        className="relative h-[250px] md:h-[450px]"
+        plugins={[autoplay.current]}>
+        <CarouselContent>
+          {movies.map((movie) => (
+            <CarouselItem key={movie.id}>
+              <Link href={`/movie/${movie.id}`} passHref>
+                <div className="bg-white p-2 rounded-lg shadow-md">
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+                    alt={movie.title}
+                    className="w-full h-auto rounded-lg ml-[10px] md:mx-[20px] sm:mx-[20px]"
+                  />
+                  <div className="m-[10px] mx-[20px]">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-sm text-gray-700">Now Playing:</h3>
+                        <h3 className="text-lg font-bold truncate">{movie.title}</h3>
+                      </div>
+                      <div className="flex items-center mt-2">
+                        <FaStar className="text-yellow-500" />
+                        <p className="ml-1 text-gray-700">
+                          {movie.vote_average} <span className="text-blue-400">/10</span>
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-700 mt-2">
+                      {expandedOverview[movie.id] || movie.overview.length < 100
+                        ? movie.overview
+                        : `${movie.overview.substring(0, 100)}... `}
+                      {movie.overview.length >= 100 && (
+                        <span
+                          className="text-blue-500 cursor-pointer"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setExpandedOverview((prev) => ({
+                              ...prev,
+                              [movie.id]: !prev[movie.id],
+                            }));
+                          }}
+                        >
+                          {expandedOverview[movie.id] ? " Show Less" : " Read more"}
+                        </span>
+                      )}
                     </p>
-                  </div>
-                </div>
-                <p className="text-black text-sm w-[320px] text-start m-[1%] mx-[10px] md:text-xl md:w-[500px]">
-                  {expandedOverview[movie.id] || movie.overview.length < 100
-                    ? movie.overview
-                    : `${movie.overview.substring(0, 100)}... `}
-                  {movie.overview.length >= 100 && (
-                    <span
-                      className="text-gray-700 justify-start text-start px-[10px] cursor-pointer"
+                    <button
+                      className="mt-2 bg-gray-100 text-black text-sm rounded px-3 py-2 flex items-center"
                       onClick={(e) => {
                         e.preventDefault();
-                        setExpandedOverview((prev) => ({
-                          ...prev,
-                          [movie.id]: !prev[movie.id],
-                        }));
+                        setActiveTrailer(activeTrailer === movie.id ? null : movie.id);
                       }}
                     >
-                      {expandedOverview[movie.id]
-                        ? "   Show Less"
-                        : "Read more"}
-                    </span>
-                  )}
-                </p>
-                <div className="flex justify-start">
-                  <button
-                    className="bg-gray-100 text-black text-sm rounded flex items-center justify-start px-3 py-3 md:text-xl"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setActiveTrailer(
-                        activeTrailer === movie.id ? null : movie.id
-                      );
-                    }}
-                  >
-                    <FaPlay className="mr-2" />
-                    {activeTrailer === movie.id
-                      ? "Close Trailer"
-                      : "Watch Trailer"}
-                  </button>
-                </div>
-
-                {activeTrailer === movie.id && trailer[movie.id] && (
-                  <div className="w-full flex ">
-                    <iframe
-                      width="320"
-                      height="180"
-                      className="sm:w-[560px] sm:h-[315px] md:w-[640px] md:h-[360px]"
-                      src={`https://www.youtube.com/embed/${trailer[movie.id]}`}
-                      title="Movie Trailer"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
+                      <FaPlay className="mr-2" />
+                      {activeTrailer === movie.id ? "Close Trailer" : "Watch Trailer"}
+                    </button>
+                    {activeTrailer === movie.id && trailer[movie.id] && (
+                      <div className="mt-4">
+                        <iframe
+                          width="100%"
+                          height="200"
+                          className="rounded-lg"
+                          src={`https://www.youtube.com/embed/${trailer[movie.id]}`}
+                          title="Movie Trailer"
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            </Link>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+                </div>
+              </Link>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-8" />
+        <CarouselNext className="right-6" />
+      </Carousel>
     </div>
   );
 };
+
+
+
+

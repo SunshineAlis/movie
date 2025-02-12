@@ -36,16 +36,16 @@ export default function PopularMovies() {
       </h1>
 
       {/* Movies List */}
-      <div className="grid grid-cols-2 gap-2 sm: grid-cols-3 md: grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 gap-2 md:grid-cols-4 gap-2 lg:grid-cols-5 gap-2  dark:text-white">
         {movies.map((movie) => (
           <Link key={movie.id} href={`/movie/${movie.id}`}>
             <div className="cursor-pointer dark:text-white">
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
                 alt={movie.title}
-                className="w-full h-[300px] object-cover rounded-lg"
+                className=" h-60 object-cover rounded-lg h-70"
               />
-              <h3 className="text-black text-lg mt-2 dark:text-white">
+              <h3 className="text-black text-sx truncate md:text-lx lg:text-2xl text-lx dark:text-white">
                 {movie.title}
               </h3>
               <div className="flex items-center mt-1 dark:text-white">

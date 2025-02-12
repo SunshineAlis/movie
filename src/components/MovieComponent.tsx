@@ -50,7 +50,7 @@ const MovieComponent = ({
   }, []);
 
   return (
-    <div className="max-w-[1200px] w-[100%] m-auto mx-[2%] dark:text-white">
+    <div className="max-w-[1200px] w-[100%] m-auto mx-[1%] px-[2%] dark:text-white">
       {[
         { title: "Upcoming Movies", movies: upComingMovies, path: "/upcoming" },
         { title: "Popular Movies", movies: popularMovies, path: "/popular" },
@@ -62,18 +62,18 @@ const MovieComponent = ({
       ].map(({ title, movies, path }) => (
         <div key={title}>
           <div className="flex justify-between items-center">
-            <h2 className="text-black text-2xl mx-[10px] mt-[10px] font-bold dark:text-white">
+            <h2 className="text-black text-2xl ml-[20px] mt-[10px] font-bold dark:text-white">
               {title}
             </h2>
             <button
               onClick={() => router.push(path)}
-              className="flex items-center space-x-20 mt-[10px] px-4 py-2 gap-[10px] lg:text-black   mr-[20px]"
+              className="flex items-center mt-[10px]  py-2 gap-[10px] lg:text-black"
             >
               See More
               <FaArrowRight />
             </button>
           </div>
-          <div className="grid grid-cols-2 gap-2 mx-[2%] sm:grid-cols-3 gap-2 md:grid-cols-4 gap-2 lg:grid-cols-5 gap-2 mx-[2%] md:gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 gap-2 md:grid-cols-4 gap-2 lg:grid-cols-5 gap-4  md:gap-2">
             {movies.map((movie) => (
               <Link key={movie.id} href={`/movie/${movie.id}`}>
                 <div className="cursor-pointer">

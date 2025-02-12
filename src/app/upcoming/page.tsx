@@ -27,21 +27,21 @@ export default function UpcomingMovies() {
   }, [page]);
   console.log(fetchMovies);
   return (
-    <div className="max-w-[1200px] w-[100%] m-auto dark:text-white">
+    <div className="max-w-[1200px] w-[100%] m-auto dark:text-white m">
       <Header />
       <h1 className="text-2xl font-bold mb-4 dark:text-white">
         Upcoming Movies
       </h1>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2 md:grid-cols-4 md:gap-4 lg:grid-cols-5 gap-2 md:gap-2 dark:text-white">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 gap-2 md:grid-cols-4 gap-2 lg:grid-cols-5 gap-2  dark:text-white">
         {movies.map((movie) => (
           <Link key={movie.id} href={`/movie/${movie.id}`}>
-            <div className=" cursor-pointer dark:text-white">
+            <div className="cursor-pointer m-auto dark:text-white">
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
                 alt={movie.title}
-                className="object-cover rounded-lg"
+                className=" h-60 object-cover rounded-lg"
               />
-              <h3 className="text-black text-lg mt-2 dark:text-white">
+              <h3 className="text-black text-sx truncate md:text-lx lg:text-2xl text-lx dark:text-white">
                 {movie.title}
               </h3>
               <div className="flex items-center mt-1 dark:text-white">
