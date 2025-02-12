@@ -7,10 +7,17 @@ import { Movie } from "@/types";
 import { getSearchMovies } from "@/utils/requests";
 import { Button } from "./ui/button";
 
-export default function Search() {
+export const SearchInput = ({
+  setIsActiveSearch,
+  isActiveSearch,
+}: {
+  isActiveSearch: boolean;
+  setIsActiveSearch: (_isActiveSearch: boolean) => void;
+}) => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
     if (searchQuery.trim()) {
@@ -29,16 +36,28 @@ export default function Search() {
     }
   };
 
+  const handleClick = () => {
+    setIsActiveSearch(true);
+    setShowButton(true); // Show the button when the search icon is clicked
+  };
+
   return (
     <div className="relative w-full sm:w-[400px]">
       {/* Search input */}
       <div className="flex items-center gap-[10px] border px-3 py-3 rounded-md">
-        <FaSearch className="cursor-pointer text-gray-500" />
+        <FaSearch
+          onClick={handleClick}
+          className="cursor-pointer text-gray-500"
+        />
         <Input
           value={searchQuery}
           size={16}
+          onClick={handleClick}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search..."
+          className={`h-7 border-0 outline-none rounded-none ${
+            isActiveSearch ? "block" : "hidden"
+          } transition-all duration-300  absolute right-[100px] ease-in-out w-[100px] border focus:w-[200px]`} // Width changes on focus
         />
       </div>
 
@@ -71,4 +90,4 @@ export default function Search() {
       )}
     </div>
   );
-}
+};

@@ -14,12 +14,10 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel"
+} from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
-
 export const MovieCardSmall = () => {
-
   const [movies, setMovies] = useState<Movie[]>([]);
   const [trailer, setTrailer] = useState<{ [key: number]: string | null }>({});
   const [activeTrailer, setActiveTrailer] = useState<number | null>(null);
@@ -62,7 +60,8 @@ export const MovieCardSmall = () => {
     <div className="w-full max-w-[1200px] mx-auto">
       <Carousel
         className="relative h-[250px] md:h-[450px]"
-        plugins={[autoplay.current]}>
+        plugins={[autoplay.current]}
+      >
         <CarouselContent>
           {movies.map((movie) => (
             <CarouselItem key={movie.id}>
@@ -77,12 +76,15 @@ export const MovieCardSmall = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <h3 className="text-sm text-gray-700">Now Playing:</h3>
-                        <h3 className="text-lg font-bold truncate">{movie.title}</h3>
+                        <h3 className="text-lg font-bold truncate">
+                          {movie.title}
+                        </h3>
                       </div>
                       <div className="flex items-center mt-2">
                         <FaStar className="text-yellow-500" />
                         <p className="ml-1 text-gray-700">
-                          {movie.vote_average} <span className="text-blue-400">/10</span>
+                          {movie.vote_average}{" "}
+                          <span className="text-blue-400">/10</span>
                         </p>
                       </div>
                     </div>
@@ -101,7 +103,9 @@ export const MovieCardSmall = () => {
                             }));
                           }}
                         >
-                          {expandedOverview[movie.id] ? " Show Less" : " Read more"}
+                          {expandedOverview[movie.id]
+                            ? " Show Less"
+                            : " Read more"}
                         </span>
                       )}
                     </p>
@@ -109,11 +113,15 @@ export const MovieCardSmall = () => {
                       className="mt-2 bg-gray-100 text-black text-sm rounded px-3 py-2 flex items-center"
                       onClick={(e) => {
                         e.preventDefault();
-                        setActiveTrailer(activeTrailer === movie.id ? null : movie.id);
+                        setActiveTrailer(
+                          activeTrailer === movie.id ? null : movie.id
+                        );
                       }}
                     >
                       <FaPlay className="mr-2" />
-                      {activeTrailer === movie.id ? "Close Trailer" : "Watch Trailer"}
+                      {activeTrailer === movie.id
+                        ? "Close Trailer"
+                        : "Watch Trailer"}
                     </button>
                     {activeTrailer === movie.id && trailer[movie.id] && (
                       <div className="mt-4">
@@ -121,7 +129,9 @@ export const MovieCardSmall = () => {
                           width="100%"
                           height="200"
                           className="rounded-lg"
-                          src={`https://www.youtube.com/embed/${trailer[movie.id]}`}
+                          src={`https://www.youtube.com/embed/${
+                            trailer[movie.id]
+                          }`}
                           title="Movie Trailer"
                           frameBorder="0"
                           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
@@ -135,13 +145,9 @@ export const MovieCardSmall = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="left-8" />
-        <CarouselNext className="right-6" />
+        <CarouselPrevious className="left-10" />
+        <CarouselNext className="right-10" />
       </Carousel>
     </div>
   );
 };
-
-
-
-
