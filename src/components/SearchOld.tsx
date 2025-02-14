@@ -1,25 +1,25 @@
 import { Movie } from "@/types";
-import { getSearchMovies } from "@/utils/requests";
+
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Input } from "./ui/input";
 import { FaArrowRight, FaSearch, FaStar } from "react-icons/fa";
 import GenreList from "@/components/GenreList";
-
+import { getSearchMovies, getGenres } from "@/utils/requests";
+import { Genre } from "@/types";
+import { ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function SearchOld() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [showGenres, setShowGenres] = useState(false); 
+
+  const [genres, setGenres] = useState<Genre[]>([]);
+  const [showGenres, setShowGenres] = useState(false);
+  const [selectedGenre, setSelectedGenre] = useState<number | undefined>();
 
   useEffect(() => {
-    if (searchQuery.trim()) {
-      searchMovies(searchQuery);
-    } else {
-      setMovies([]);
-    }
-
     if (searchQuery.trim()) {
       searchMovies(searchQuery);
     } else {
@@ -36,6 +36,34 @@ export default function SearchOld() {
       console.error("Error fetching movies:", error);
     }
   };
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const data = await getGenres();
+        setGenres(data.genres || []);
+      } catch (error) {
+        console.error("Error fetching genres:", error);
+      }
+    };
+
+    fetchGenres();
+  }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      searchMovies(searchQuery);
+    } else {
+      setMovies([]);
+    }
+  }, [searchQuery]);
+
+  const handleGenreSelect = (genreId: number) => {
+    setSelectedGenre(genreId);
+    router.push(`/Search/?genres=${genreId}`);
+    setShowGenres(false);
+  };
+
+  // ?filer
 
   return (
     <div className="relative w-[400px]">
@@ -58,7 +86,6 @@ export default function SearchOld() {
           ) : (
             <div className="max-h-[300px] w-full overflow-y-auto">
               {movies.map((movie) => (
-
                 <div
                   key={movie.id}
                   className="relative px-4 w-[100%] gap-4 cursor-pointer hover:bg-gray-200 flex flex-col items-center"
@@ -74,10 +101,15 @@ export default function SearchOld() {
                     )}
 
                     <div className="py-4">
-                      <span className="text-sm font-semibold">{movie.title}</span>
-                      <div className="flex items-center px-2 gap-2" >
+                      <span className="text-sm font-semibold">
+                        {movie.title}
+                      </span>
+                      <div className="flex items-center px-2 gap-2">
                         <FaStar className="text-yellow-500" />
-                        <p>{movie.vote_average}<span className="text-gray-500 ml-1">/10</span></p>
+                        <p>
+                          {movie.vote_average}
+                          <span className="text-gray-500 ml-1">/10</span>
+                        </p>
                       </div>
                       <p>{movie.release_date?.slice(0, 4)}</p>
                     </div>
@@ -88,22 +120,17 @@ export default function SearchOld() {
                   </div>
                   <div className="w-[98%] h-[1px] bg-gray-300 absolute top-[-15px]"></div>
                 </div>
-
               ))}
             </div>
           )}
-          <p className="py-2 px-4 cursor-pointer"
-           onClick={() => setShowGenres(!showGenres)}
+          <p
+            className="py-2 px-4 cursor-pointer"
+            onClick={() => router.push(`/Search`)}
           >
-            See all results for <strong>{searchQuery}</strong>
+            See all results for "<strong>{searchQuery}</strong>"
           </p>
-          <GenreList showGenres={showGenres} />
         </div>
       )}
-
-
-
-      
     </div>
   );
 }

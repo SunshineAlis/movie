@@ -82,41 +82,12 @@ const CategoryPage = () => {
   return (
     <div>
       <Header />
-      <div className="flex  max-w-[1200px] w-[100%] m-auto dark:text-white">
-        <div className="w-[50%] ">
-          <h1 className="font-bold text-lx mb-[10px] ml-[30px]">
-            Search Filter
-          </h1>
-          <div className="mt-2">
-            <div className="left-0 p-4 w-full mx-[10px]">
-              <h2 className="font-bold text-xl mb-2">Genres</h2>
-              <p className="font-bold text-sx mb-2">
-                See lists of movies by genre
-              </p>
-              <div className="w-full h-[2px] border-2 mb-2"></div>
-              <div className="flex flex-wrap gap-2">
-                {genres.map((genre) => (
-                  <button
-                    key={genre.id}
-                    onClick={() => handleGenreSelect(genre.id)}
-                    className={`p-2 rounded flex items-center font-bold text-[8px] border hover:bg-gray-200 md:text-xs ${
-                      selectedGenres.includes(genre.id) ? "bg-gray-300" : ""
-                    }`}
-                  >
-                    {genre.name}
-                    <Arrow />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <div className="flex flex-col mt-[20px] mb-[30px] ml-[10px] dark:text-white">
         <div className="ml-4">
           <h1 className="text-xl font-bold mb-4 dark:text-white">
             {totalResults} Titles
           </h1>
-          <div className="">
+          <div className="mr-[50px]">
             {genreMovies.length === 0 ? (
               <p>No movies found for the selected genres.</p>
             ) : (
@@ -152,6 +123,35 @@ const CategoryPage = () => {
 
             {/* DynamicPagination component */}
             {totalPages && <DynamicPagination total_page={totalPages} />}
+          </div>
+        </div>
+
+        <div>
+          <h1 className="font-bold text-lx mb-[10px] ml-[30px]">
+            Search Filter
+          </h1>
+          <div className="mt-2">
+            <div className="left-0 p-4 w-full mx-[10px]">
+              <h2 className="font-bold text-xl mb-2">Genres</h2>
+              <p className="font-bold text-sx mb-2">
+                See lists of movies by genre
+              </p>
+              <div className="w-full h-[2px] border-2 mb-2"></div>
+              <div className="flex flex-wrap gap-2">
+                {genres.map((genre) => (
+                  <button
+                    key={genre.id}
+                    onClick={() => handleGenreSelect(genre.id)}
+                    className={`p-2 rounded flex items-center font-bold text-[8px] border hover:bg-gray-200 md:text-xs ${
+                      selectedGenres.includes(genre.id) ? "bg-gray-300" : ""
+                    }`}
+                  >
+                    {genre.name}
+                    <Arrow />
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
