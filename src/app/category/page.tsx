@@ -9,7 +9,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { Genre } from "@/types";
-import Pagination from "@/components/ui/pagination";
+import { DynamicPagination } from "@/components/DynamicPagination";
 
 const CategoryPage = () => {
   const router = useRouter();
@@ -17,14 +17,13 @@ const CategoryPage = () => {
 
   const genreQuery = searchParams?.get("genres");
   const selectedGenres = genreQuery ? genreQuery.split(",").map(Number) : [];
-  const pageQuery = searchParams?.get("page");
-  const page = pageQuery ? Number(pageQuery) : 1;
-
+  
   const [loading, setLoading] = useState(true);
   const [genreMovies, setGenreMovies] = useState<any[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
   const [totalResults, setTotalResults] = useState<number>(0);
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number | undefined>();
+  const currentPage = Number(searchParams.get("page")) || 1;
 
   const fetchGenres = async () => {
     try {
@@ -47,8 +46,8 @@ const CategoryPage = () => {
     }
     setLoading(true);
     try {
-      const data = await getFetchGenre(selectedGenres, page);
-      console.log("Fetched movies for page:", page, data);
+      const data = await getFetchGenre(selectedGenres, currentPage);
+      console.log("Fetched movies for page:", currentPage, data);
 
       if (data.success === false) {
         console.error("TMDB API Error:", data.status_message);
@@ -63,6 +62,7 @@ const CategoryPage = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchGenreMovies();
   }, [searchParams]);
@@ -73,19 +73,15 @@ const CategoryPage = () => {
       : [...selectedGenres, genreId];
 
     console.log("Updated Genres:", updatedGenres);
-    router.push(`/category?genres=${updatedGenres.join(",")}&page=${page}`);
+    router.push(`/category?genres=${updatedGenres.join(",")}&page=1`);
   };
 
-  const handlePageChange = (newPage: number) => {
-    router.push(`/category?genres=${selectedGenres.join(",")}&page=${newPage}`);
-  };
   if (loading) return <div>Loading...</div>;
 
   return (
     <div>
       <Header />
-      {window.innerWidth >= 375 && window.innerWidth <= 950 ? (
-        <div className="flex flex-col mt-[20px] mb-[30px] ml-[10px] dark:text-white">
+      <div className="flex flex-col mt-[20px] mb-[30px] ml-[10px] dark:text-white">
         <div>
           <h1 className="font-bold text-lx mb-[10px] ml-[30px]">
             Search Filter
@@ -123,7 +119,7 @@ const CategoryPage = () => {
             {genreMovies.length === 0 ? (
               <p>No movies found for the selected genres.</p>
             ) : (
-              <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 gap-2 md:grid-cols-4 gap-2 lg:grid-cols-5 gap-2  dark:text-white">
+              <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 dark:text-white">
                 {genreMovies.map((movie) => (
                   <Link key={movie.id} href={`/movie/${movie.id}`}>
                     <li className="mb-4 cursor-pointer">
@@ -138,7 +134,7 @@ const CategoryPage = () => {
                           <p>No Image Available</p>
                         </div>
                       )}
-                      <h3 className="text-black text-sx truncate md:text-lx lg:text-2xl text-lx dark:text-white">
+                      <h3 className="text-black text-sx truncate md:text-lx lg:text-2xl dark:text-white">
                         {movie.title}
                       </h3>
                       <div className="flex items-center mt-1 dark:text-white">
@@ -153,95 +149,13 @@ const CategoryPage = () => {
               </ul>
             )}
 
-            <Pagination
-              page={page}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          </div>
-        </div>
-      </div>):
-      
-      
-      
-      
-      (<div className="flex mt-[50px] mb-[30px] ml-[10px] dark:text-white">
-        <div>
-          <h1 className="font-bold text-2xl mb-[30px] ml-[20px]">
-            Search Filter
-          </h1>
-          <div className="mt-2">
-            <div className="left-0 p-4 w-[400px]">
-              <h2 className="font-bold text-2xl mb-2">Genres</h2>
-              <p className="font-bold text-l mb-2">
-                See lists of movies by genre
-              </p>
-              <div className="w-full h-[2px] border-2 mb-2"></div>
-              <div className="flex flex-wrap gap-2">
-                {genres.map((genre) => (
-                  <button
-                    key={genre.id}
-                    onClick={() => handleGenreSelect(genre.id)}
-                    className={`p-2 rounded flex items-center font-bold text-xs border hover:bg-gray-200 ${
-                      selectedGenres.includes(genre.id) ? "bg-gray-300" : ""
-                    }`}
-                  >
-                    {genre.name}
-                    <Arrow />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="ml-4">
-          <h1 className="text-xl font-bold mb-4 dark:text-white">
-            {totalResults} Titles
-          </h1>
-          <div className="mr-[50px]">
-            {genreMovies.length === 0 ? (
-              <p>No movies found for the selected genres.</p>
-            ) : (
-              <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 gap-2 md:grid-cols-4 gap-2 lg:grid-cols-5 gap-2  dark:text-white">
-                {genreMovies.map((movie) => (
-                  <Link key={movie.id} href={`/movie/${movie.id}`}>
-                    <li className="mb-4 cursor-pointer">
-                      {movie.backdrop_path ? (
-                        <img
-                          src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
-                          alt={movie.title}
-                          className="object-cover h-60 rounded-lg"
-                        />
-                      ) : (
-                        <div className="bg-gray-300 rounded-lg flex items-center justify-center">
-                          <p>No Image Available</p>
-                        </div>
-                      )}
-                      <h3 className="text-black text-sx truncate md:text-lx lg:text-l  dark:text-white">
-                        {movie.title}
-                      </h3>
-                      <div className="flex items-center mt-1 dark:text-white">
-                        <FaStar className="text-yellow-500" />
-                        <span className="text-black ml-1 dark:text-white">
-                          {movie.vote_average}/10
-                        </span>
-                      </div>
-                    </li>
-                  </Link>
-                ))}
-              </ul>
+            {/* DynamicPagination компонент ашиглалт */}
+            {totalPages && (
+              <DynamicPagination total_page={totalPages} />
             )}
-
-            <Pagination
-              page={page}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
           </div>
         </div>
-      </div>)}
-    
+      </div>
 
       <Footer />
     </div>

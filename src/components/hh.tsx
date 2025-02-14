@@ -13,7 +13,8 @@ export default function Search() {
     const router = useRouter;
     const [searchQuery,setSearchQuery] = useState<string>("");
     const [movies, setMovies] = useState<Movie[]>([]);
-
+    const pageQuery = searchParams?.get("page");
+    const page = pageQuery ? Number(pageQuery) : 1;
     useEffect(()=>{
     const timer= setTimeout(() => {
         if(searchQuery.trim()){
@@ -25,6 +26,9 @@ export default function Search() {
     }, 300);
 return ()=>clearTimeout(timer);
 },[searchQuery]);
+const handlePageChange = (newPage: number) => {
+    router.push(`/category?genres=${selectedGenres.join(",")}&page=${newPage}`);
+  };
 
 const searchMovies =async (query: string )=>{
     try{

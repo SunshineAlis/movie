@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation"; // Import to get dynamic route params
+import { useParams } from "next/navigation"; // 
 import { FaStar } from "react-icons/fa";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { getMoreLikeMovies } from "@/utils/requests"; // Function to fetch similar movies
+import { getMoreLikeMovies } from "@/utils/requests"; // 
 import Link from "next/link";
-import { Pagination } from "@/components/Pagination"; // Pagination component
+import { DynamicPagination } from "@/components/DynamicPagination"; //
 import { Movie } from "@/types";
 
 export default function MoreLike() {
@@ -22,10 +22,11 @@ export default function MoreLike() {
   const [similarMovies, setSimilarMovies] = useState<Movie[]>([]); //
   const [page, setPage] = useState<number>(1); //
   const [totalPages, setTotalPages] = useState<number>(1); //
+  
 
   const fetchSimilarMovies = async () => {
     try {
-      if (!id) return; // Ensure id is available
+      if (!id) return; // 
       const data = await getMoreLikeMovies(Number(id), page); //
       console.log("Similar Movies:", data); //
       setSimilarMovies(data.results); //
@@ -69,11 +70,9 @@ export default function MoreLike() {
       </div>
 
       {/* Pagination */}
-      <Pagination
-        fetchData={setPage}
-        totalPages={totalPages}
-        // Pass the handler for page change
-      />
+      {totalPages && (
+              <DynamicPagination total_page={totalPages} />
+            )}
 
       <Footer />
     </div>

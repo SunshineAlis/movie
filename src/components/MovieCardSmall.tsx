@@ -59,18 +59,20 @@ export const MovieCardSmall = () => {
   return (
     <div className="w-full max-w-[1200px] mx-auto">
       <Carousel
-        className="relative h-[250px] md:h-[450px]"
+        className="relative"
         plugins={[autoplay.current]}
       >
-        <CarouselContent>
+        <CarouselContent  className="sticky top-">
           {movies.map((movie) => (
-            <CarouselItem key={movie.id}>
+            <CarouselItem 
+            // className="sticky top-[-110px] z-10"
+            key={movie.id}>
               <Link href={`/movie/${movie.id}`} passHref>
-                <div className="bg-white p-2 rounded-lg shadow-md">
+                <div className="bg-white p-2 rounded-lg  overflow-hidden shadow-md">
                   <img
                     src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
                     alt={movie.title}
-                    className="w-full h-auto rounded-lg ml-[10px] md:mx-[20px] sm:mx-[20px]"
+                    className="w-full h-[250px] object-cover rounded-lg ml-[10px] md:mx-[20px] sm:mx-[20px]"
                   />
                   <div className="m-[10px] mx-[20px]">
                     <div className="flex items-center justify-between">
@@ -145,8 +147,8 @@ export const MovieCardSmall = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="left-10" />
-        <CarouselNext className="right-10" />
+        {/* <CarouselPrevious className="left-1" />
+        <CarouselNext className="right-5" /> */}
       </Carousel>
     </div>
   );

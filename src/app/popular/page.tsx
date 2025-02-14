@@ -5,9 +5,9 @@ import { FaStar } from "react-icons/fa";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getPopularMovies } from "@/utils/requests";
-import { Pagination } from "@/components/Pagination";
 import Link from "next/link";
 import { Movie } from "@/types";
+import { DynamicPagination } from "@/components/DynamicPagination";
 
 export default function PopularMovies() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -26,7 +26,7 @@ export default function PopularMovies() {
     };
 
     fetchMovies();
-  }, [page]); // Зөвхөн page өөрчлөгдөх үед fetch хийх
+  }, [page]); // 
 
   return (
     <div className="max-w-[1200px] w-[100%] dark:text-white m-auto">
@@ -59,8 +59,9 @@ export default function PopularMovies() {
         ))}
       </div>
 
-      {/* Pagination component */}
-      <Pagination totalPages={totalPages} fetchData={setPage} />
+      {totalPages && (
+              <DynamicPagination total_page={totalPages} />
+            )}
 
       <Footer />
     </div>

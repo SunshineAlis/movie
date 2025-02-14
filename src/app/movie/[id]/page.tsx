@@ -12,11 +12,7 @@ import {
 } from "@/utils/requests";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import {
-  ChevronRight,
-  ChevronRightSquare,
-  ChevronsRightIcon,
-} from "lucide-react";
+
 
 const MovieDetail = () => {
   const params = useParams();

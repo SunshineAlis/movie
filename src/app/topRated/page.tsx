@@ -4,7 +4,7 @@ import { FaStar } from "react-icons/fa";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getTopRatedMovies } from "../../utils/requests";
-import { Pagination } from "@/components/Pagination";
+import {DynamicPagination } from "@/components/DynamicPagination";
 import Link from "next/link";
 import { Movie } from "@/types";
 
@@ -55,7 +55,9 @@ export default function TopRatedMovies() {
           </Link>
         ))}
       </div>
-      <Pagination fetchData={setPage} totalPages={totalPages} />
+      {totalPages && (
+              <DynamicPagination total_page={totalPages} />
+            )}
       <Footer />
     </div>
   );
