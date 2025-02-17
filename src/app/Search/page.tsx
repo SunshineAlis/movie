@@ -1,4 +1,5 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -102,7 +103,7 @@ const SearchGenre = () => {
 
   return (
     <div>
-      {window.innerWidth >= 375 && window.innerWidth <= 750 ?
+      {typeof window !== "undefined" && window.innerWidth >= 375 && window.innerWidth <= 750 ?
        (
         <SmallSearchQuery/>
       ):( 

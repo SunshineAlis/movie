@@ -7,7 +7,7 @@ import Email from "@/components/Email";
 export default function Home() {
   return (
     <div className="max-w-[1200px] w-full w-[100%]">
-      {window.innerWidth >= 300 && window.innerWidth <= 700 ? (
+      {typeof window !== "undefined" && window.innerWidth >= 375 && window.innerWidth <= 700 ? (
         <div className="w-[100%] h-[300px] bg-[#4338CA]  text-white mt-[30px] py-[10%]">
           <div className="flex flex-col items-start ml-[10px]">
             <div className="flex items-center justify-items-center text-sx mt-2 mx-4">

@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <div>
-      {window.innerWidth >= 375 && window.innerWidth <= 750 ? (
+     {typeof window !== "undefined" && window.innerWidth >= 375 && window.innerWidth <= 750 ? (
         <Search />
       ) : (
         <div className="max-w-[1200px] w-[100%] bg-white m-auto flex items-center justify-between gap-2 py-2 pt-4 dark:bg-gray-900">

@@ -12,7 +12,7 @@ const Home = () => {
     <div className="max-w-[1200px] w-[100%] m-auto">
       <Header />
 
-      {window.innerWidth >= 375 && window.innerWidth <= 950 ? (
+      {typeof window !== "undefined" && window.innerWidth >= 375 && window.innerWidth <= 950 ? (
         <MovieCardSmall />
       ) : (
         <MovieSlide />
