@@ -10,7 +10,7 @@ import { MovieLogo } from "@/components/MovieLogo";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import GenreList from "@/components/GenreList";
+
 
 export default function Search() {
   const router = useRouter();
@@ -54,11 +54,11 @@ export default function Search() {
 
   const handleGenreSelect = (genreId: number) => {
     setSelectedGenre(genreId);
-    router.push(`/GenreSearch/?genres=${genreId}`);
-    setShowGenres(false);
+    router.push(`/category/?genres=${genreId}`);
   };
 
   return (
+
     <div className="relative w-full sm:w-[400px]">
       <div className="bg-white  flex items-center justify-between gap-2 py-4 dark:bg-gray-900">
         {/* logo */}
@@ -203,36 +203,10 @@ export default function Search() {
                     )}
                     <p
                       className="py-2 px-4 cursor-pointer"
-                      onClick={() => setShowGenres(!showGenres)}
+                      onClick={() => router.push(`/Search`)}
                     >
                       See all results for <strong>{searchQuery}</strong>
                     </p>
-                    {showGenres && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: showGenres ? 1 : 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="bg-gray-100 px-3 absolute top-[30px] left-[20px] z-[10] rounded-md w-[310px] mx-2 py-4 my-4"
-                      >
-                        <h2 className="font-bold text-xl text-black">Genres</h2>
-                        <p className="text-sm text-gray-700">
-                          See lists of movies by genre
-                        </p>
-                        <div className="border-b-2 my-2"></div>
-                        <div className="flex flex-wrap gap-2">
-                          {genres.map((genre) => (
-                            <button
-                              key={genre.id}
-                              onClick={() => handleGenreSelect(genre.id)}
-                              className="w-fit flex items-center pl-2 truncate rounded-xl text-sm border-2 hover:bg-gray-200 text-black text-center"
-                            >
-                              {genre.name}
-                              <ChevronRight />
-                            </button>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
                   </div>
                 )}
               </motion.div>

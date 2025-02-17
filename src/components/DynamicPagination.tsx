@@ -13,9 +13,11 @@ import {
 } from "@/components/ui/pagination";
 
 type PaginationProps = {
+  
   page: number;
-  totalPages: number;
+  totalPages?: number;
   onPageChange: (newPage: number) => void;
+  currentPage?:number;
 };
 
 export const DynamicPagination = ({ total_page }: { total_page: number }) => {

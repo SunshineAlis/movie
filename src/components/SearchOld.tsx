@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Input } from "./ui/input";
 import { FaArrowRight, FaSearch, FaStar } from "react-icons/fa";
-import GenreList from "@/components/GenreList";
 import { getSearchMovies, getGenres } from "@/utils/requests";
 import { Genre } from "@/types";
 import { ChevronRight } from "lucide-react";

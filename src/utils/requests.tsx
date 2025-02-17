@@ -1,4 +1,5 @@
 import axios from "axios";
+// import {useEffect,useState} from "react";
 
 const BASE_URL = process.env.BASE_URL || "https://api.themoviedb.org/3";
 const API_KEY = process.env.API_KEY;
@@ -27,6 +28,15 @@ return data;
 
 
 
+
+export const getGenres = async (page: number = 1, genreId?: number) => {
+  const { data } = await instance.get("genre/movie/list", {
+    params: { page, ...(genreId && { with_genres: genreId }) },
+  });
+  return data;
+};
+
+
 export const getMovieVideos = async (id: number) => {
   const { data } = await instance.get(`/movie/${id}/videos?api_key=${API_KEY}`);
   return data;
@@ -44,6 +54,13 @@ export const getMovieCredits = async (id: number) => {
   return data;
 };
 
+export const getMoreLikeMovies = async (id: number, page: number = 1) => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${process.env.API_KEY}&language=en-US&page=${page}`
+  );
+  const data = await response.json();
+  return data;
+};
 
 export const getFetchGenre = async (selectedGenres: number[], page: number) => {
   const { data } = await instance.get(
@@ -54,22 +71,24 @@ export const getFetchGenre = async (selectedGenres: number[], page: number) => {
   return data;
 };
 
-export const getMoreLikeMovies = async (id: number, page: number = 1) => {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${process.env.API_KEY}&language=en-US&page=${page}`
-  );
-  const data = await response.json();
-  return data;
+
+export const getMoviesByGenres = async (genreIds: number[]) => {
+  if (!genreIds.length) return { results: [] }; 
+
+  try {
+    const response = await fetch(
+      `/api/movies?genres=${genreIds.join(",")}`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch movies by genres");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching movies by genres:", error);
+    return { results: [] };
+  }
 };
-
-
-export const getGenres = async (page: number = 1, genreId?: number) => {
-  const { data } = await instance.get("genre/movie/list", {
-    params: { page, ...(genreId && { with_genres: genreId }) },
-  });
-  return data;
-};
-
 
 
 // 🎬 Popular Movies
