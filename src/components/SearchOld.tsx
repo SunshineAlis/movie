@@ -1,5 +1,6 @@
-import { Movie } from "@/types";
+"use client";
 
+import { Movie } from "@/types";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Input } from "./ui/input";
