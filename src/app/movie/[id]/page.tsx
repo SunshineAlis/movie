@@ -170,7 +170,7 @@ const MovieDetail = () => {
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title}
-                className="w-full w-[17%] m-[1%] h-80 rounded-lg "
+                className="w-full w-1/4 m-[1%] h-80 rounded-lg "
               />
               {trailerKey && (
                 <iframe
